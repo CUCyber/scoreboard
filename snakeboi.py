@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import ipaddress
 import json
 import multiprocessing
@@ -13,14 +13,14 @@ import fooster.web.page
 
 
 teams = {
-    'team1': '10.0.130.0',
-    'team2': '10.0.131.0',
-    'team3': '10.0.132.0',
-    'team4': '10.0.133.0',
+    'Team1': '10.0.130.0',
+    'Team2': '10.0.131.0',
+    'Team3': '10.0.132.0',
+    'Team4': '10.0.133.0',
 }
 
 services = {
-    'smtp': {'offset': 5, 'port': 25},
+    'SMTP': {'offset': 5, 'port': 25},
 }
 
 interval = 60
@@ -53,21 +53,21 @@ def poll():
         for addr in addrs:
             up = False
 
-            if proto == 'ping':
+            if proto.lower() == 'ping':
                 pass
-            elif proto == 'ftp':
+            elif proto.lower() == 'ftp':
                 pass
-            elif proto == 'ssh':
+            elif proto.lower() == 'ssh':
                 pass
-            elif proto == 'smtp':
+            elif proto.lower() == 'smtp':
                 pass
-            elif proto == 'http':
+            elif proto.lower() == 'http':
                 pass
-            elif proto == 'https':
+            elif proto.lower() == 'https':
                 pass
-            elif proto == 'pop3':
+            elif proto.lower() == 'pop3':
                 pass
-            elif proto == 'imap':
+            elif proto.lower() == 'imap':
                 pass
 
             if up:
@@ -89,17 +89,17 @@ class Scoreboard(fooster.web.page.PageHandler):
     def format(self, page):
         scoreboard = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
         for name, items in scores.items():
-            scoreboard += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td>{}</td>'.format('Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
+            scoreboard += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
 
         scoreboard += '\n\t</tbody>\n</table>'
 
-        return page.format(scoreboard=scoreboard)
+        return page.format(refresh=interval, scoreboard=scoreboard)
 
 def main():
     routes = { '/': Scoreboard }
 
     svcd = multiprocessing.Process(target=poll)
-    httpd = fooster.web.HTTPServer(('localhost', 8080), routes, sync=sync)
+    httpd = fooster.web.HTTPServer(('localhost', 8000), routes, sync=sync)
 
     svcd.start()
     httpd.start()

@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta http-equiv="refresh" content="{refresh}">
+
 		<title>Scoreboard</title>
 
 		<style>
 			html, body {{
 				padding: 0px;
 				margin: 0px;
+
+				background-color: black;
 			}}
 
 			main {{
-				padding: 40px;
+				margin: 40px;
 				width: 80%;
 				margin-left: auto;
 				margin-right: auto;
+
+				background-color: white;
 			}}
 
 			table, tr, th, td {{
@@ -25,14 +31,33 @@
 				width: 100%;
 			}}
 
+			tr:nth-child(even) {{
+				background-color: #f2f2f2;
+			}}
+
+			th {{
+				background-color: #bb22ee;
+			}}
+
 			th, td {{
+				text-align: center;
 				width: 5%;
 				padding: 20px;
-				border: 1px solid black;
 			}}
 
 			th:first-child, td:first-child {{
+				text-align: left;
 				width: auto;
+			}}
+
+			.up {{
+				color: black;
+				background-color: green;
+			}}
+
+			.down {{
+				color: white;
+				background-color: red;
 			}}
 		</style>
 	</head>
