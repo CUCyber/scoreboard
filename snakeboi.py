@@ -45,16 +45,18 @@ def poll():
             addr = str(ipaddress.IPv4Address(base) + service['offset'])
             score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
             scores[name].append(score)
-            addrs.append({'proto': proto, 'addr': addr, 'port': service['port'], 'score': scores[name][-1]})
+            addrs.append({'proto': proto, 'addr': addr, 'port': service['port'] if 'port' in service else 0, 'score': scores[name][-1]})
 
     run.value = True
 
     while run.value:
+        wait = time.time()
+
         for addr in addrs:
             up = False
 
             if proto.lower() == 'ping':
-                pass
+                up = subprocess.call(['ping', '-c4', addr['addr']]) == 0
             elif proto.lower() == 'ftp':
                 pass
             elif proto.lower() == 'ssh':
@@ -73,7 +75,6 @@ def poll():
             if up:
                 addr['score']['score'] += 1
 
-        wait = time.time()
         while run.value and time.time() - wait < interval:
             time.sleep(1)
 
