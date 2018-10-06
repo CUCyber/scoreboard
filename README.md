@@ -17,7 +17,7 @@ A scoreboard for verifying and scoring services in a red vs. blue competition.
 ### Debian/Ubuntu/Kali
 
 ```sh
-$ sudo apt install python3 python3-setuptools build-essential libmariadb-dev
+$ sudo apt install build-essential python3 python3-setuptools python3-cffi libldap2-dev libmariadb-dev
 $ sudo ./setup.py install
 ```
 
@@ -27,7 +27,7 @@ $ sudo ./setup.py install
 ```sh
 $ sudo yum groupinstall "Development Tools"
 $ sudo yum install epel-release
-$ sudo yum install python34 python34-devel python34-setuptools mariadb-devel
+$ sudo yum install python34 python34-devel python34-setuptools python34-cffi openldap-devel mariadb-devel
 $ sudo ./setup.py install
 ```
 
@@ -36,7 +36,7 @@ $ sudo ./setup.py install
 
 ```sh
 $ sudo dnf groupinstall "Development Tools"
-$ sudo dnf install python3-devel mariadb-devel
+$ sudo dnf install python3-devel python3-cffi openldap-devel mariadb-devel
 $ sudo ./setup.py install
 ```
 
@@ -44,7 +44,7 @@ $ sudo ./setup.py install
 ### Arch
 
 ```sh
-$ sudo pacman -S base-devel mariadb-clients
+$ sudo pacman -S base-devel python-cffi libldap libmariadbclient
 $ sudo ./setup.py install
 ```
 
@@ -52,7 +52,7 @@ $ sudo ./setup.py install
 ### Gentoo
 
 ```sh
-$ sudo emerge dev-db/mariadb-connector-c
+$ sudo emerge dev-python/cffi net-nds/openldap dev-db/mariadb-connector-c
 $ sudo ./setup.py install
 ```
 
