@@ -1,5 +1,5 @@
-snakboi
-=======
+snakeboi
+========
 
 A scoreboard for verifying and scoring services in a red vs. blue competition.
 
