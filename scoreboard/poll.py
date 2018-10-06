@@ -44,16 +44,18 @@ def watch(config):
     opts = []
 
     for name, base in config.teams.items():
-        scoreboard.sync.scores[name] = scoreboard.sync.manager.list()
+        team = []
 
         for proto, service in config.services.items():
             addr = str(ipaddress.IPv4Address(base) + service['offset'])
-            score = scoreboard.sync.manager.dict({'proto': proto, 'addr': addr, 'status': False, 'score': 0})
-            opt = {'addr': addr, 'link': score}
+            score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
+            opt = {'link': (name, len(team)), 'addr': addr}
             opt.update(service)
 
-            scoreboard.sync.scores[name].append(score)
+            team.append(score)
             opts.append(opt)
+
+        scoreboard.sync.scores[name] = team
 
     while True:
         try:
@@ -61,10 +63,15 @@ def watch(config):
 
             for opt in opts:
                 if check(opt):
-                    opt['link']['status'] = True
-                    opt['link']['score'] += opt['weight'] if 'weight' in opt else 1
+                    tmp = scoreboard.sync.scores[opt['link'][0]]
+                    tmp[opt['link'][1]]['status'] = True
+                    tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
+                    scoreboard.sync.scores[opt['link'][0]] = tmp
                 else:
-                    opt['link']['status'] = False
+                    tmp = scoreboard.sync.scores[opt['link'][0]]
+                    tmp[opt['link'][1]]['status'] = False
+                    scoreboard.sync.scores[opt['link'][0]] = tmp
+
 
             while time.time() - wait < config.interval:
                 time.sleep(1)
