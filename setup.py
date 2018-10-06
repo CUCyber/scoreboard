@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='snakeboi',
+    name='scoreboard',
     version='0.0.1',
     description='a scoreboard for verifying and scoring services in a red vs. blue competition',
     license='MIT',
@@ -12,5 +12,5 @@ setup(
     install_requires=['fooster-web', 'dnspython', 'python-ldap', 'mysqlclient', 'paramiko'],
     packages=find_packages(),
     package_data={'': ['html/*.*']},
-    entry_points={'console_scripts': ['snakeboi = snakeboi.main:main']},
+    entry_points={'console_scripts': ['scoreboard = scoreboard.main:main']},
 )

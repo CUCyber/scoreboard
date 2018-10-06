@@ -6,10 +6,10 @@ import sys
 
 import fooster.web
 
-import snakeboi.poll
-import snakeboi.scoreboard
+import scoreboard.poll
+import scoreboard.scoreboard
 
-import snakeboi.sync
+import scoreboard.sync
 
 
 def main():
@@ -42,11 +42,11 @@ def main():
     http_log.addFilter(fooster.web.HTTPLogFilter())
     http_log.setLevel(logging.INFO)
 
-    log = logging.getLogger('snakeboi')
+    log = logging.getLogger('scoreboard')
     log.addHandler(logging.StreamHandler(sys.stderr))
 
-    svcd = multiprocessing.Process(target=snakeboi.poll.watch, args=(config,))
-    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': snakeboi.scoreboard.gen(config, args.template)}, sync=snakeboi.sync.manager, log=web_log, http_log=http_log)
+    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config,))
+    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     svcd.start()
     httpd.start()
@@ -59,7 +59,7 @@ def main():
     httpd.close()
 
     sys.stdout.write('\n')
-    json.dump({name: [score.copy() for score in items] for name, items in snakeboi.sync.scores.items()}, sys.stdout, indent=2)
+    json.dump({name: [score.copy() for score in items] for name, items in scoreboard.sync.scores.items()}, sys.stdout, indent=2)
 
 
 if __name__ == '__main__':

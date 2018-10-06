@@ -1,5 +1,5 @@
-snakeboi
-========
+scoreboard
+==========
 
 A scoreboard for verifying and scoring services in a red vs. blue competition.
 
@@ -69,5 +69,5 @@ $ ./setup.py install
 ## Running
 
 ```sh
-$ snakeboi config.py
+$ scoreboard config.py
 ```

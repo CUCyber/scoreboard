@@ -1,41 +1,41 @@
 import ipaddress
 import time
 
-import snakeboi.ping
-import snakeboi.ftp
-import snakeboi.ssh
-import snakeboi.smtp
-import snakeboi.dns
-import snakeboi.http
-import snakeboi.ldap
-import snakeboi.pop3
-import snakeboi.imap
-import snakeboi.mysql
+import scoreboard.ping
+import scoreboard.ftp
+import scoreboard.ssh
+import scoreboard.smtp
+import scoreboard.dns
+import scoreboard.http
+import scoreboard.ldap
+import scoreboard.pop3
+import scoreboard.imap
+import scoreboard.mysql
 
-import snakeboi.sync
+import scoreboard.sync
 
 
 def check(opt):
     if opt['proto'].lower() == 'ping':
-        return snakeboi.ping.check(**opt)
+        return scoreboard.ping.check(**opt)
     elif opt['proto'].lower() == 'ftp':
-        return snakeboi.ftp.check(**opt)
+        return scoreboard.ftp.check(**opt)
     elif opt['proto'].lower() == 'ssh':
-        return snakeboi.ssh.check(**opt)
+        return scoreboard.ssh.check(**opt)
     elif opt['proto'].lower() == 'smtp':
-        return snakeboi.smtp.check(**opt)
+        return scoreboard.smtp.check(**opt)
     elif opt['proto'].lower() == 'dns':
-        return snakeboi.dns.check(**opt)
+        return scoreboard.dns.check(**opt)
     elif opt['proto'].lower() == 'http':
-        return snakeboi.http.check(**opt)
+        return scoreboard.http.check(**opt)
     elif opt['proto'].lower() == 'ldap':
-        return snakeboi.ldap.check(**opt)
+        return scoreboard.ldap.check(**opt)
     elif opt['proto'].lower() == 'pop3':
-        return snakeboi.pop3.check(**opt)
+        return scoreboard.pop3.check(**opt)
     elif opt['proto'].lower() == 'imap':
-        return snakeboi.imap.check(**opt)
+        return scoreboard.imap.check(**opt)
     elif opt['proto'].lower() == 'mysql':
-        return snakeboi.mysql.check(**opt)
+        return scoreboard.mysql.check(**opt)
     else:
         raise RuntimeError('config error: proto not found')
 
@@ -44,15 +44,15 @@ def watch(config):
     opts = []
 
     for name, base in config.teams.items():
-        snakeboi.sync.scores[name] = snakeboi.sync.manager.list()
+        scoreboard.sync.scores[name] = scoreboard.sync.manager.list()
 
         for proto, service in config.services.items():
             addr = str(ipaddress.IPv4Address(base) + service['offset'])
-            score = snakeboi.sync.manager.dict({'proto': proto, 'addr': addr, 'status': False, 'score': 0})
+            score = scoreboard.sync.manager.dict({'proto': proto, 'addr': addr, 'status': False, 'score': 0})
             opt = {'addr': addr, 'link': score}
             opt.update(service)
 
-            snakeboi.sync.scores[name].append(score)
+            scoreboard.sync.scores[name].append(score)
             opts.append(opt)
 
     while True:
