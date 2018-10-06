@@ -65,5 +65,5 @@ $ ./setup.py install
 ## Running
 
 ```sh
-$ snakeboi
+$ snakeboi config.py
 ```
