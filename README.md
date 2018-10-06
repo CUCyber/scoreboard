@@ -52,6 +52,7 @@ $ sudo ./setup.py install
 ### Gentoo
 
 ```sh
+$ sudo emerge dev-db/mariadb-connector-c
 $ sudo ./setup.py install
 ```
 
