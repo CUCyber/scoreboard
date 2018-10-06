@@ -172,7 +172,7 @@ def poll(config):
                             httpc.request(opt['method'], opt['url'], opt['body'] if 'body' in opt else None, headers)
 
                             if 'regex' in opt:
-                                up = up and re.match(opt['regex'], httpc.getresponse().read().decode())
+                                up = up and re.search(opt['regex'], httpc.getresponse().read().decode())
                     except (http.client.HTTPException, socket.error, AttributeError):
                         up = False
                 elif opt['proto'].lower() == 'ldap':
