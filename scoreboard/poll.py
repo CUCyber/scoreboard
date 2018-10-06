@@ -43,19 +43,20 @@ def check(opt):
 def watch(config):
     opts = []
 
-    for name, base in config.teams.items():
-        team = []
+    with scoreboard.sync.lock:
+        for name, base in config.teams.items():
+            team = []
 
-        for proto, service in config.services.items():
-            addr = str(ipaddress.IPv4Address(base) + service['offset'])
-            score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
-            opt = {'link': (name, len(team)), 'addr': addr}
-            opt.update(service)
+            for proto, service in config.services.items():
+                addr = str(ipaddress.IPv4Address(base) + service['offset'])
+                score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
+                opt = {'link': (name, len(team)), 'addr': addr}
+                opt.update(service)
 
-            team.append(score)
-            opts.append(opt)
+                team.append(score)
+                opts.append(opt)
 
-        scoreboard.sync.scores[name] = team
+            scoreboard.sync.scores[name] = team
 
     while True:
         try:
@@ -63,14 +64,16 @@ def watch(config):
 
             for opt in opts:
                 if check(opt):
-                    tmp = scoreboard.sync.scores[opt['link'][0]]
-                    tmp[opt['link'][1]]['status'] = True
-                    tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
-                    scoreboard.sync.scores[opt['link'][0]] = tmp
+                    with scoreboard.sync.lock:
+                        tmp = scoreboard.sync.scores[opt['link'][0]]
+                        tmp[opt['link'][1]]['status'] = True
+                        tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
+                        scoreboard.sync.scores[opt['link'][0]] = tmp
                 else:
-                    tmp = scoreboard.sync.scores[opt['link'][0]]
-                    tmp[opt['link'][1]]['status'] = False
-                    scoreboard.sync.scores[opt['link'][0]] = tmp
+                    with scoreboard.sync.lock:
+                        tmp = scoreboard.sync.scores[opt['link'][0]]
+                        tmp[opt['link'][1]]['status'] = False
+                        scoreboard.sync.scores[opt['link'][0]] = tmp
 
 
             while time.time() - wait < config.interval:

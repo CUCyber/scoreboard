@@ -12,12 +12,14 @@ def gen(cfg, template):
         config = cfg
 
         def format(self, page):
-            html = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in Scoreboard.config.services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
-            for name, items in scoreboard.sync.scores.items():
-                html += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
+            with scoreboard.sync.lock:
+                html = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in Scoreboard.config.services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
 
-            html += '\n\t</tbody>\n</table>'
+                for name, items in scoreboard.sync.scores.items():
+                    html += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
 
-            return page.format(refresh=Scoreboard.config.interval, scoreboard=html)
+                html += '\n\t</tbody>\n</table>'
+
+                return page.format(refresh=Scoreboard.config.interval, scoreboard=html)
 
     return Scoreboard
