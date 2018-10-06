@@ -14,7 +14,6 @@ import scoreboard.sync
 
 def main():
     import argparse
-    import importlib.util
 
     parser = argparse.ArgumentParser(description='a scoreboard for verifying and scoring services in a red vs. blue competition')
     parser.add_argument('-a', '--address', dest='address', default='', help='address to bind')
@@ -24,9 +23,16 @@ def main():
 
     args = parser.parse_args()
 
-    config_spec = importlib.util.spec_from_file_location('config', args.config)
-    config = importlib.util.module_from_spec(config_spec)
-    config_spec.loader.exec_module(config)
+    try:
+        import importlib.util
+
+        config_spec = importlib.util.spec_from_file_location('config', args.config)
+        config = importlib.util.module_from_spec(config_spec)
+        config_spec.loader.exec_module(config)
+    except AttributeError:
+        import imp
+
+        config = imp.load_source('config', args.config)
 
     web_log = logging.getLogger('web')
 
