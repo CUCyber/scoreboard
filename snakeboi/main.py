@@ -58,6 +58,7 @@ def main():
 
     httpd.close()
 
+    sys.stdout.write('\n')
     json.dump({name: [score.copy() for score in items] for name, items in snakeboi.sync.scores.items()}, sys.stdout, indent=2)
 
 
