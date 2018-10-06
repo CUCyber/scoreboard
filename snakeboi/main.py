@@ -5,6 +5,7 @@ import json
 import multiprocessing
 import os.path
 import random
+import re
 import signal
 import ssl
 import string
@@ -48,8 +49,8 @@ def poll(config):
 
         for proto, service in config.services.items():
             addr = str(ipaddress.IPv4Address(base) + service['offset'])
-            score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
-            opt = {'proto': proto, 'addr': addr, 'link': score}
+            score = sync.dict({'proto': proto, 'addr': addr, 'status': False, 'score': 0})
+            opt = {'addr': addr, 'link': score}
             opt.update(service)
 
             scores[name].append(score)
@@ -155,18 +156,24 @@ def poll(config):
                             context = ssl.create_default_context()
                             context.load_cert_chain(opt['cert'])
 
-                            httpc = http.client.HTTPSConnection(opt['host'] if 'host' in opt else opt['addr'], opt['port'], context=context)
+                            httpc = http.client.HTTPSConnection(opt['addr'], opt['port'], context=context)
                         else:
-                            httpc = http.client.HTTPConnection(opt['host'] if 'host' in opt else opt['addr'], opt['port'])
+                            httpc = http.client.HTTPConnection(opt['addr'], opt['port'])
+
+                        httpc.connect()
 
                         up = True
 
                         if 'method' in opt:
-                            req = httpc.request(opt['method'], opt['url'], opt['body'] if 'body' in opt else None, opt['headers'] if 'headers' in opt else None)
+                            headers = opt['headers'] if 'headers' in opt else {}
+                            if 'host' in opt:
+                                headers['host'] = opt['host']
 
-                            if 'contents' in opt:
-                                up = up and req.read() == opt['contents']
-                    except http.client.HTTPException:
+                            httpc.request(opt['method'], opt['url'], opt['body'] if 'body' in opt else None, headers)
+
+                            if 'regex' in opt:
+                                up = up and re.match(opt['regex'], httpc.getresponse().read().decode())
+                    except (http.client.HTTPException, socket.error, AttributeError):
                         up = False
                 elif opt['proto'].lower() == 'ldap':
                     try:
@@ -241,9 +248,14 @@ def poll(config):
                                 up = up and cursor.fetchall() == opt['result']
                     except MySQLdb.Error:
                         up = False
+                else:
+                    raise RuntimeError('config error: proto not found')
 
                 if up:
+                    opt['link']['status'] = True
                     opt['link']['score'] += 1
+                else:
+                    opt['link']['status'] = False
 
             while time.time() - wait < config.interval:
                 time.sleep(1)
@@ -255,16 +267,16 @@ def poll(config):
 class Scoreboard(fooster.web.page.PageHandler):
     directory = os.path.dirname(os.path.abspath(__file__)) + '/html'
     page = 'index.html'
-    config = {'interval': 60}
+    config = {'services': [], 'interval': 60}
 
     def format(self, page):
-        scoreboard = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
+        scoreboard = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in Scoreboard.config.services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
         for name, items in scores.items():
             scoreboard += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
 
         scoreboard += '\n\t</tbody>\n</table>'
 
-        return page.format(refresh=config.interval, scoreboard=scoreboard)
+        return page.format(refresh=Scoreboard.config.interval, scoreboard=scoreboard)
 
 def main():
     import importlib.util
@@ -291,7 +303,7 @@ def main():
 
     httpd.close()
 
-    json.dump({name: items[:] for name, items in scores.items()}, sys.stdout, indent=2)
+    json.dump({name: [score.copy() for score in items] for name, items in scores.items()}, sys.stdout, indent=2)
 
 if __name__ == '__main__':
     main()
