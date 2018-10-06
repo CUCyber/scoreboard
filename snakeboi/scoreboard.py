@@ -5,9 +5,9 @@ import fooster.web.page
 import snakeboi.sync
 
 
-def gen(cfg):
+def gen(cfg, template):
     class Scoreboard(fooster.web.page.PageHandler):
-        directory = os.path.dirname(os.path.abspath(__file__)) + '/html'
+        directory = template if template else os.path.dirname(os.path.abspath(__file__)) + '/html'
         page = 'index.html'
         config = cfg
 
