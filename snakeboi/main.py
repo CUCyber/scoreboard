@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import logging
 import multiprocessing
 import sys
 
@@ -27,8 +28,25 @@ def main():
     config = importlib.util.module_from_spec(config_spec)
     config_spec.loader.exec_module(config)
 
+    web_log = logging.getLogger('web')
+
+    web_log_handler = logging.StreamHandler(sys.stderr)
+    web_log.addHandler(web_log_handler)
+    web_log.setLevel(logging.WARNING)
+
+    http_log = logging.getLogger('http')
+
+    http_log_handler = logging.StreamHandler(sys.stderr)
+    http_log_handler.setFormatter(fooster.web.HTTPLogFormatter())
+    http_log.addHandler(http_log_handler)
+    http_log.addFilter(fooster.web.HTTPLogFilter())
+    http_log.setLevel(logging.INFO)
+
+    log = logging.getLogger('snakeboi')
+    log.addHandler(logging.StreamHandler(sys.stderr))
+
     svcd = multiprocessing.Process(target=snakeboi.poll.watch, args=(config,))
-    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': snakeboi.scoreboard.gen(config, args.template)}, sync=snakeboi.sync.manager)
+    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': snakeboi.scoreboard.gen(config, args.template)}, sync=snakeboi.sync.manager, log=web_log, http_log=http_log)
 
     svcd.start()
     httpd.start()
