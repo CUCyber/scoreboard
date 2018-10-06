@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name='snakeboi',
     version='0.0.1',
-    description='a scoreboard for verifying and scoring red vs. blue services',
+    description='a scoreboard for verifying and scoring services in a red vs. blue competition',
     license='MIT',
     author='CU Cyber',
     author_email='cyber@clemson.edu',

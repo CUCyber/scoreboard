@@ -16,7 +16,7 @@ def main():
     import argparse
     import importlib.util
 
-    parser = argparse.ArgumentParser(description='a scoreboard for verifying and scoring red vs. blue services')
+    parser = argparse.ArgumentParser(description='a scoreboard for verifying and scoring services in a red vs. blue competition')
     parser.add_argument('-a', '--address', dest='address', default='', help='address to bind')
     parser.add_argument('-p', '--port', type=int, dest='port', default=8000, help='port to bind')
     parser.add_argument('-t', '--template', dest='template', help='template directory to use')
