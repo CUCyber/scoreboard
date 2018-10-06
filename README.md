@@ -17,7 +17,7 @@ A scoreboard for verifying and scoring services in a red vs. blue competition.
 ### Debian/Ubuntu/Kali
 
 ```sh
-$ sudo apt install python3 python3-setuptools
+$ sudo apt install python3 python3-setuptools build-essential libmariadb-dev
 $ sudo ./setup.py install
 ```
 
@@ -25,8 +25,9 @@ $ sudo ./setup.py install
 ### RedHat/CentOS
 
 ```sh
+$ sudo yum groupinstall "Development Tools"
 $ sudo yum install epel-release
-$ sudo yum install python34 python34-setuptools
+$ sudo yum install python34 python34-setuptools mariadb-devel
 $ sudo ./setup.py install
 ```
 
@@ -34,6 +35,8 @@ $ sudo ./setup.py install
 ### Fedora
 
 ```sh
+$ sudo dnf groupinstall "Development Tools"
+$ sudo dnf install mariadb-devel
 $ sudo ./setup.py install
 ```
 
@@ -41,6 +44,7 @@ $ sudo ./setup.py install
 ### Arch
 
 ```sh
+$ sudo pacman -S base-devel mariadb-clients
 $ sudo ./setup.py install
 ```
 
@@ -57,7 +61,7 @@ $ sudo ./setup.py install
 Requires [Homebrew](https://brew.sh/).
 
 ```sh
-$ brew install python3
+$ brew install python3 mysql-connector-c
 $ ./setup.py install
 ```
 
