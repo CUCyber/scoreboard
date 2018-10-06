@@ -17,7 +17,7 @@ A scoreboard for verifying and scoring services in a red vs. blue competition.
 ### Debian/Ubuntu/Kali
 
 ```sh
-$ sudo apt install python3
+$ sudo apt install python3 python3-setuptools
 $ sudo ./setup.py install
 ```
 
