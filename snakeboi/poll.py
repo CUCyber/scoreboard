@@ -62,7 +62,7 @@ def watch(config):
             for opt in opts:
                 if check(opt):
                     opt['link']['status'] = True
-                    opt['link']['score'] += 1
+                    opt['link']['score'] += opt['weight'] if 'weight' in opt else 1
                 else:
                     opt['link']['status'] = False
 
