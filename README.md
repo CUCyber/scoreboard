@@ -27,7 +27,7 @@ $ sudo ./setup.py install
 ```sh
 $ sudo yum groupinstall "Development Tools"
 $ sudo yum install epel-release
-$ sudo yum install python34 python34-setuptools mariadb-devel
+$ sudo yum install python34 python34-devel python34-setuptools mariadb-devel
 $ sudo ./setup.py install
 ```
 
@@ -36,7 +36,7 @@ $ sudo ./setup.py install
 
 ```sh
 $ sudo dnf groupinstall "Development Tools"
-$ sudo dnf install mariadb-devel
+$ sudo dnf install python3-devel mariadb-devel
 $ sudo ./setup.py install
 ```
 
