@@ -282,7 +282,7 @@ def main():
     routes = { '/': Scoreboard }
 
     svcd = multiprocessing.Process(target=poll, args=(config,))
-    httpd = fooster.web.HTTPServer(('localhost', 8000), routes, sync=sync)
+    httpd = fooster.web.HTTPServer(('', 8000), routes, sync=sync)
 
     svcd.start()
     httpd.start()
