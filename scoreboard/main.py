@@ -65,7 +65,7 @@ def main():
     httpd.close()
 
     sys.stdout.write('\n')
-    json.dump({name: [score.copy() for score in items] for name, items in scoreboard.sync.scores.items()}, sys.stdout, indent=2)
+    json.dump(scoreboard.sync.scores.copy(), sys.stdout, indent=2)
 
 
 if __name__ == '__main__':
