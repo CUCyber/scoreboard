@@ -1,7 +1,7 @@
 import MySQLdb
 
 
-def check(addr, port, username, password, db, query=None, result=None, **kwargs):
+def check(addr, port, username, password, db='', query=None, result=None, **kwargs):
     up = False
 
     try:
