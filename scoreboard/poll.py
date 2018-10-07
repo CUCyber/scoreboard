@@ -40,29 +40,44 @@ def check(opt):
         raise RuntimeError('config error: proto not found')
 
 
-def watch(config):
-    opts = []
-
+def reload(config):
     with scoreboard.sync.lock:
         for name, base in config.teams.items():
+            idx = 0
             team = []
 
             for proto, service in config.services.items():
                 addr = str(ipaddress.IPv4Address(base) + service['offset'])
-                score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
+                if name in scoreboard.sync.scores and idx < len(scoreboard.sync.scores[name]):
+                    score = {'proto': proto, 'addr': addr, 'status': scoreboard.sync.scores[name][idx]['status'], 'score': scoreboard.sync.scores[name][idx]['score']}
+                else:
+                    score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
                 opt = {'link': (name, len(team)), 'addr': addr}
                 opt.update(service)
 
                 team.append(score)
-                opts.append(opt)
+                scoreboard.sync.opts.append(opt)
+
+                idx += 1
 
             scoreboard.sync.scores[name] = team
 
+        for name in scoreboard.sync.scores.keys():
+            if name not in config.teams:
+                del scoreboard.sync.scores[name]
+
+        del scoreboard.sync.services[:]
+
+        for service in config.services.keys():
+            scoreboard.sync.services.append(service)
+
+
+def watch(interval):
     while True:
         try:
             wait = time.time()
 
-            for opt in opts:
+            for opt in scoreboard.sync.opts:
                 if check(opt):
                     with scoreboard.sync.lock:
                         tmp = scoreboard.sync.scores[opt['link'][0]]
@@ -75,7 +90,7 @@ def watch(config):
                         tmp[opt['link'][1]]['status'] = False
                         scoreboard.sync.scores[opt['link'][0]] = tmp
 
-            while time.time() - wait < config.interval:
+            while time.time() - wait < interval:
                 time.sleep(1)
 
         except KeyboardInterrupt:

@@ -2,7 +2,9 @@
 import json
 import logging
 import multiprocessing
+import os
 import sys
+import time
 
 import fooster.web
 
@@ -10,6 +12,21 @@ import scoreboard.poll
 import scoreboard.scoreboard
 
 import scoreboard.sync
+
+
+def load(path):
+    try:
+        import importlib.util
+
+        config_spec = importlib.util.spec_from_file_location('config', path)
+        config = importlib.util.module_from_spec(config_spec)
+        config_spec.loader.exec_module(config)
+    except AttributeError:
+        import imp
+
+        config = imp.load_source('config', path)
+
+    return config
 
 
 def main():
@@ -22,17 +39,6 @@ def main():
     parser.add_argument('config', help='config file to use')
 
     args = parser.parse_args()
-
-    try:
-        import importlib.util
-
-        config_spec = importlib.util.spec_from_file_location('config', args.config)
-        config = importlib.util.module_from_spec(config_spec)
-        config_spec.loader.exec_module(config)
-    except AttributeError:
-        import imp
-
-        config = imp.load_source('config', args.config)
 
     web_log = logging.getLogger('web')
 
@@ -51,14 +57,26 @@ def main():
     log = logging.getLogger('scoreboard')
     log.addHandler(logging.StreamHandler(sys.stderr))
 
-    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config,))
+    config = load(args.config)
+    scoreboard.poll.reload(config)
+
+    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config.interval,))
     httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     svcd.start()
     httpd.start()
 
     try:
-        svcd.join()
+        last = os.stat(args.config).st_mtime
+
+        while True:
+            if os.stat(args.config).st_mtime > last:
+                config = load(args.config)
+                scoreboard.poll.reload(config)
+
+                last = os.stat(args.config).st_mtime
+
+            time.sleep(config.interval)
     except KeyboardInterrupt:
         svcd.join()
 
