@@ -66,6 +66,7 @@ def main():
 
     sys.stdout.write('\n')
     json.dump(scoreboard.sync.scores.copy(), sys.stdout, indent=2)
+    sys.stdout.write('\n')
 
 
 if __name__ == '__main__':
