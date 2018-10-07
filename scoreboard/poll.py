@@ -75,7 +75,6 @@ def watch(config):
                         tmp[opt['link'][1]]['status'] = False
                         scoreboard.sync.scores[opt['link'][0]] = tmp
 
-
             while time.time() - wait < config.interval:
                 time.sleep(1)
 
