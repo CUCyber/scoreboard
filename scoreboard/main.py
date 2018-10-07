@@ -3,6 +3,7 @@ import json
 import logging
 import multiprocessing
 import os
+import signal
 import sys
 import time
 
@@ -27,6 +28,11 @@ def load(path):
         config = imp.load_source('config', path)
 
     return config
+
+
+def output():
+    json.dump(scoreboard.sync.scores.copy(), sys.stdout, indent=2)
+    sys.stdout.write('\n')
 
 
 def main():
@@ -60,31 +66,44 @@ def main():
     config = load(args.config)
     scoreboard.poll.reload(config)
 
+    sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
+
     svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config.interval,))
     httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     svcd.start()
     httpd.start()
 
-    try:
-        last = os.stat(args.config).st_mtime
+    signal.signal(signal.SIGINT, sigint)
 
+    signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit())
+    signal.signal(signal.SIGUSR1, lambda signum, frame: output())
+
+    last = os.stat(args.config).st_mtime
+
+    try:
         while True:
+            wait = time.time()
+
             if os.stat(args.config).st_mtime > last:
                 config = load(args.config)
                 scoreboard.poll.reload(config)
 
                 last = os.stat(args.config).st_mtime
 
-            time.sleep(config.interval)
+            while time.time() - wait < config.interval:
+                time.sleep(1)
     except KeyboardInterrupt:
-        svcd.join()
+        sys.stdout.write('\n')
+    except SystemExit:
+        pass
+
+    svcd.terminate()
+    svcd.join()
 
     httpd.close()
 
-    sys.stdout.write('\n')
-    json.dump(scoreboard.sync.scores.copy(), sys.stdout, indent=2)
-    sys.stdout.write('\n')
+    output()
 
 
 if __name__ == '__main__':

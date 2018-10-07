@@ -74,24 +74,20 @@ def reload(config):
 
 def watch(interval):
     while True:
-        try:
-            wait = time.time()
+        wait = time.time()
 
-            for opt in scoreboard.sync.opts:
-                if check(opt):
-                    with scoreboard.sync.lock:
-                        tmp = scoreboard.sync.scores[opt['link'][0]]
-                        tmp[opt['link'][1]]['status'] = True
-                        tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
-                        scoreboard.sync.scores[opt['link'][0]] = tmp
-                else:
-                    with scoreboard.sync.lock:
-                        tmp = scoreboard.sync.scores[opt['link'][0]]
-                        tmp[opt['link'][1]]['status'] = False
-                        scoreboard.sync.scores[opt['link'][0]] = tmp
+        for opt in scoreboard.sync.opts:
+            if check(opt):
+                with scoreboard.sync.lock:
+                    tmp = scoreboard.sync.scores[opt['link'][0]]
+                    tmp[opt['link'][1]]['status'] = True
+                    tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
+                    scoreboard.sync.scores[opt['link'][0]] = tmp
+            else:
+                with scoreboard.sync.lock:
+                    tmp = scoreboard.sync.scores[opt['link'][0]]
+                    tmp[opt['link'][1]]['status'] = False
+                    scoreboard.sync.scores[opt['link'][0]] = tmp
 
-            while time.time() - wait < interval:
-                time.sleep(1)
-
-        except KeyboardInterrupt:
-            break
+        while time.time() - wait < interval:
+            time.sleep(1)
