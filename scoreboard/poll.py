@@ -43,28 +43,26 @@ def check(opt):
 def reload(config):
     with scoreboard.sync.lock:
         for name, base in config.teams.items():
-            idx = 0
             team = []
 
-            for proto, service in config.services.items():
-                addr = str(ipaddress.IPv4Address(base) + service['offset'])
-                if name in scoreboard.sync.scores and idx < len(scoreboard.sync.scores[name]):
-                    score = {'proto': proto, 'addr': addr, 'status': scoreboard.sync.scores[name][idx]['status'], 'score': scoreboard.sync.scores[name][idx]['score']}
+            for service, opts in config.services.items():
+                addr = str(ipaddress.IPv4Address(base) + opts['offset'])
+                if name in scoreboard.sync.scores:
+                    for prev in scoreboard.sync.scores[name]:
+                        if prev['service'] == service:
+                            score = {'service': service, 'addr': addr, 'status': prev['status'], 'score': prev['score']}
+                            break
+                    else:
+                        score = {'service': service, 'addr': addr, 'status': False, 'score': 0}
                 else:
-                    score = {'proto': proto, 'addr': addr, 'status': False, 'score': 0}
+                    score = {'service': service, 'addr': addr, 'status': False, 'score': 0}
                 opt = {'link': (name, len(team)), 'addr': addr}
-                opt.update(service)
+                opt.update(opts)
 
                 team.append(score)
                 scoreboard.sync.opts.append(opt)
 
-                idx += 1
-
             scoreboard.sync.scores[name] = team
-
-        for name in scoreboard.sync.scores.keys():
-            if name not in config.teams:
-                del scoreboard.sync.scores[name]
 
         del scoreboard.sync.services[:]
 
