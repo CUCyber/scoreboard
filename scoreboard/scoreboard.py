@@ -16,7 +16,7 @@ def gen(config, template):
                 html = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in scoreboard.sync.services) + '<th>Score</th>\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
 
                 for name, items in scoreboard.sync.scores.items():
-                    html += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
+                    html += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in items if score['service'] in scoreboard.sync.services) + '<td>{}</td>\n\t\t</tr>'.format(sum(score['score'] for score in items))
 
                 html += '\n\t</tbody>\n</table>'
 
