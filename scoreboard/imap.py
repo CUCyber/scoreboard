@@ -1,5 +1,9 @@
 import imaplib
+import logging
 import ssl
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, username=None, password=None, list=None, **kwargs):

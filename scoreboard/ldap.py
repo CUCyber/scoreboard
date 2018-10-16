@@ -1,4 +1,9 @@
+import logging
+
 import ldap
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, **kwargs):

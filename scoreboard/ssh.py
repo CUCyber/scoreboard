@@ -1,7 +1,11 @@
+import logging
 import socket
 
 import paramiko.client
 import paramiko.ssh_exception
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, username, password, **kwargs):

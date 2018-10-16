@@ -1,8 +1,12 @@
+import ftplib
 import io
+import logging
 import random
 import ssl
 import string
-import ftplib
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, username=None, password=None, file=None, contents=None, dne=None, **kwargs):

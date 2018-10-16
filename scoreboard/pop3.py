@@ -1,6 +1,10 @@
+import logging
 import poplib
 import socket
 import ssl
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, username=None, password=None, list=None, **kwargs):

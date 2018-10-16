@@ -1,7 +1,11 @@
+import logging
 import random
 import smtplib
 import ssl
 import string
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, username=None, password=None, from_=None, to=None, **kwargs):

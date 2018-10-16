@@ -1,7 +1,11 @@
 import http.client
+import logging
 import re
 import socket
 import ssl
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, method=None, headers=None, host=None, url=None, body=None, regex=None, **kwargs):

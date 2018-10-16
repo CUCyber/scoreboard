@@ -1,4 +1,8 @@
+import logging
 import subprocess
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(addr, **kwargs):
