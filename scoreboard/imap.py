@@ -12,6 +12,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, **kwar
     up = False
 
     try:
+        #imapc = imaplib.IMAP4(addr, port, timeout=1)
         imapc = imaplib.IMAP4(addr, port)
 
         up = True

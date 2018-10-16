@@ -12,7 +12,7 @@ def check(addr, port, username, password, db='', query=None, result=None, **kwar
     up = False
 
     try:
-        db = MySQLdb.connect(addr, username, password, db, port)
+        db = MySQLdb.connect(addr, username, password, db, port, connect_timeout=1)
 
         cursor = db.cursor()
 

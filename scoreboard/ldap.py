@@ -13,6 +13,7 @@ def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, **k
 
     try:
         ldapc = ldap.initialize('ldap://{}:{}'.format(addr, port))
+        ldapc.set_option(ldap.OPT_NETWORK_TIMEOUT, 1)
 
         up = True
 

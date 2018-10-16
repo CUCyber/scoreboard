@@ -17,7 +17,7 @@ def check(addr, port, username, password, **kwargs):
         sshc = paramiko.client.SSHClient()
         sshc.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
 
-        sshc.connect(addr, port, username, password)
+        sshc.connect(addr, port, username, password, timeout=1)
 
         up = True
 

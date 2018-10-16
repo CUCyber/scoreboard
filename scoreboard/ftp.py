@@ -22,9 +22,9 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
             context = ssl.create_default_context()
             context.load_cert_chain(cert)
 
-            ftp = ftplib.FTP_TLS(context=context)
+            ftp = ftplib.FTP_TLS(timeout=1, context=context)
         else:
-            ftp = ftplib.FTP()
+            ftp = ftplib.FTP(timeout=1)
 
         ftp.connect(addr, port)
 

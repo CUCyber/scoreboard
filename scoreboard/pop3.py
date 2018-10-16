@@ -13,7 +13,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, **kwar
     up = False
 
     try:
-        popc = poplib.POP3(addr, port)
+        popc = poplib.POP3(addr, port, timeout=1)
 
         if cert is not None:
             context = ssl.create_default_context()

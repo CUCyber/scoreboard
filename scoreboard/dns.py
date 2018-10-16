@@ -14,6 +14,7 @@ def check(addr, port, hostname, type, answer=None, **kwargs):
 
     try:
         dnsc = dns.resolver.Resolver()
+        dnsc.timeout = 1
 
         dnsc.nameservers = addr
         dnsc.port = port

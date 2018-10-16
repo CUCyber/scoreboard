@@ -18,9 +18,9 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
             context = ssl.create_default_context()
             context.load_cert_chain(cert)
 
-            httpc = http.client.HTTPSConnection(addr, port, context=context)
+            httpc = http.client.HTTPSConnection(addr, port, timeout=1, context=context)
         else:
-            httpc = http.client.HTTPConnection(addr, port)
+            httpc = http.client.HTTPConnection(addr, port, timeout=1)
 
         httpc.connect()
 
