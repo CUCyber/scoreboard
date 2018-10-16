@@ -1,4 +1,5 @@
 import ipaddress
+import logging
 import time
 
 import scoreboard.ping
@@ -13,6 +14,9 @@ import scoreboard.imap
 import scoreboard.mysql
 
 import scoreboard.sync
+
+
+log = logging.getLogger('scoreboard')
 
 
 def check(opt):
@@ -41,6 +45,8 @@ def check(opt):
 
 
 def reload(config):
+    log.info('reloading')
+
     with scoreboard.sync.lock:
         for name, base in config.teams.items():
             team = []
@@ -72,6 +78,8 @@ def reload(config):
 
 def watch(interval):
     while True:
+        log.info('checking services')
+
         wait = time.time()
 
         for opt in scoreboard.sync.opts:
