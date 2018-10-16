@@ -8,7 +8,7 @@ log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, hostname, type, answer=None, **kwargs):
-    log.info('DNS: trying {addr}:{port} for {type} {hostname}', addr=addr, port=port, type=type, hostname=hostname)
+    log.info(('DNS: trying {addr}:{port} for {type} {hostname}').format(addr=addr, port=port, type=type, hostname=hostname))
 
     up = False
 

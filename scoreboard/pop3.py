@@ -8,7 +8,7 @@ log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, cert=None, username=None, password=None, list=None, **kwargs):
-    log.info('POP3: trying {addr}:{port}' + (' with {username}' if username else ''), addr=addr, port=port, username=username)
+    log.info(('POP3: trying {addr}:{port}' + (' with {username}' if username else '')).format(addr=addr, port=port, username=username))
 
     up = False
 

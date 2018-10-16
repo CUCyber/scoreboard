@@ -9,7 +9,7 @@ log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, username, password, **kwargs):
-    log.info('SSH: trying {addr}:{port} with {username}', addr=addr, port=port, username=username)
+    log.info(('SSH: trying {addr}:{port} with {username}').format(addr=addr, port=port, username=username))
 
     up = False
 

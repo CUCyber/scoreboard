@@ -6,7 +6,7 @@ log = logging.getLogger('scoreboard')
 
 
 def check(addr, **kwargs):
-    log.info('ICMP: trying {addr}', addr=addr)
+    log.info(('ICMP: trying {addr}').format(addr=addr))
 
     up = False
 
