@@ -32,8 +32,6 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
 
         if username is not None:
             ftp.login(username, password)
-        else:
-            ftp.login()
 
         if file is not None:
             up = file in ftp.nlst()
