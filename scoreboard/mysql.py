@@ -2,6 +2,8 @@ import MySQLdb
 
 
 def check(addr, port, username, password, db='', query=None, result=None, **kwargs):
+    log.info('MySQL: trying {addr}:{port}' + (' with {username}' if username else '') + ' for {db}', addr=addr, port=port, username=username, db=db)
+
     up = False
 
     try:

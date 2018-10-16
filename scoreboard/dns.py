@@ -1,8 +1,15 @@
+import logging
+
 import dns.exception
 import dns.resolver
 
 
+log = logging.getLogger('scoreboard')
+
+
 def check(addr, port, hostname, type, answer=None, **kwargs):
+    log.info('DNS: trying {addr}:{port} for {type} {hostname}', addr=addr, port=port, type=type, hostname=hostname)
+
     up = False
 
     try:

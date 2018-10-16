@@ -5,6 +5,8 @@ import string
 
 
 def check(addr, port, cert=None, username=None, password=None, from_=None, to=None, **kwargs):
+    log.info('SMTP: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {from_} -> {to}' if from_ else ''), addr=addr, port=port, username=username, from_=from_, to=to)
+
     up = False
 
     nonce = ''.join(random.choice(string.ascii_letters) for _ in range(16))

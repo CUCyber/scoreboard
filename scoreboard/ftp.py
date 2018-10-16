@@ -6,6 +6,8 @@ import ftplib
 
 
 def check(addr, port, cert=None, username=None, password=None, file=None, contents=None, dne=None, **kwargs):
+    log.info('FTP: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {file}' if file else ''), addr=addr, port=port, username=username, file=file)
+
     up = False
 
     if dne is not None:

@@ -2,6 +2,8 @@ import ldap
 
 
 def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, **kwargs):
+    log.info('LDAP: trying {addr}:{port}' + (' with {dn}' if dn else '') + (' for {base} cn={cn}' if base else ''), addr=addr, port=port, dn=dn, base=base, cn=cn)
+
     up = False
 
     try:

@@ -2,6 +2,8 @@ import subprocess
 
 
 def check(addr, **kwargs):
+    log.info('ICMP: trying {addr}', addr=addr)
+
     up = False
 
     try:
