@@ -50,7 +50,7 @@ def main():
 
     web_log_handler = logging.StreamHandler(sys.stderr)
     web_log.addHandler(web_log_handler)
-    web_log.setLevel(logging.WARNING)
+    web_log.setLevel(logging.INFO)
 
     http_log = logging.getLogger('http')
 
@@ -62,6 +62,7 @@ def main():
 
     log = logging.getLogger('scoreboard')
     log.addHandler(logging.StreamHandler(sys.stderr))
+    log.setLevel(logging.INFO)
 
     config = load(args.config)
     scoreboard.poll.reload(config)
