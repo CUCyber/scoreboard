@@ -58,7 +58,7 @@ def main():
     http_log_handler.setFormatter(fooster.web.HTTPLogFormatter())
     http_log.addHandler(http_log_handler)
     http_log.addFilter(fooster.web.HTTPLogFilter())
-    http_log.setLevel(logging.EXCEPTION)
+    http_log.setLevel(logging.CRITICAL)
 
     log = logging.getLogger('scoreboard')
     log.addHandler(logging.StreamHandler(sys.stderr))
