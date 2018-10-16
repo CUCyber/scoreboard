@@ -7,7 +7,7 @@ log = logging.getLogger('scoreboard')
 
 
 def check(addr, port, username, password, db='', query=None, result=None, **kwargs):
-    log.info(('MySQL: trying {addr}:{port}' + (' with {username}' if username else '') + ' for {db}').format(addr=addr, port=port, username=username, db=db))
+    log.info(('MySQL: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {db}' if db else '')).format(addr=addr, port=port, username=username, db=db))
 
     up = False
 
