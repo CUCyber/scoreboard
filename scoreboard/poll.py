@@ -45,7 +45,7 @@ def check(opt):
 
 
 def reload(config):
-    log.info('reloading')
+    log.info('Reloading')
 
     with scoreboard.sync.lock:
         for name, base in config.teams.items():
@@ -78,7 +78,7 @@ def reload(config):
 
 def watch(interval):
     while True:
-        log.info('checking services')
+        log.info('Checking services')
 
         wait = time.time()
 
