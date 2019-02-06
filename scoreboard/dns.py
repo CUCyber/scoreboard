@@ -16,15 +16,15 @@ def check(addr, port, hostname, type, answer=None, **kwargs):
         dnsc = dns.resolver.Resolver()
         dnsc.timeout = 1
 
-        dnsc.nameservers = addr
+        dnsc.nameservers = [addr]
         dnsc.port = port
 
-        answer = dnsc.query(hostname, type)
+        response = dnsc.query(hostname, type)
 
         up = True
 
         if answer is not None:
-            up = answer[0].items[0] == answer
+            up = response[0].items[0] == answer
     except dns.exception.DNSException:
         up = False
 

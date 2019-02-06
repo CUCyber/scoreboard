@@ -12,6 +12,7 @@ import scoreboard.ldap
 import scoreboard.pop3
 import scoreboard.imap
 import scoreboard.mysql
+import scoreboard.tcp
 
 import scoreboard.sync
 
@@ -40,8 +41,10 @@ def check(opt):
         return scoreboard.imap.check(**opt)
     elif opt['proto'].lower() == 'mysql':
         return scoreboard.mysql.check(**opt)
+    elif opt['proto'].lower() == 'tcp':
+        return scoreboard.tcp.check(**opt)
     else:
-        raise RuntimeError('config error: proto not found')
+        raise RuntimeError('config error: proto \'{}\' not found'.format(opt['proto'].lower()))
 
 
 def reload(config):
@@ -52,6 +55,10 @@ def reload(config):
             team = []
 
             for service, opts in config.services.items():
+                if service == 'dns':
+                    if 'answer' in opts and isinstance(opts['answer'], int):
+                        opts['answer'] = str(ipaddress.IPv4Address(base) + opts['answer'])
+
                 addr = str(ipaddress.IPv4Address(base) + opts['offset'])
                 if name in scoreboard.sync.scores:
                     for prev in scoreboard.sync.scores[name]:
