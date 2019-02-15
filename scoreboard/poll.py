@@ -22,27 +22,27 @@ log = logging.getLogger('scoreboard')
 
 def check(opt, timeout):
     if opt['proto'].lower() == 'ping':
-        return scoreboard.ping.check(**opt, timeout=timeout)
+        return scoreboard.ping.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'ftp':
-        return scoreboard.ftp.check(**opt, timeout=timeout)
+        return scoreboard.ftp.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'ssh':
-        return scoreboard.ssh.check(**opt, timeout=timeout)
+        return scoreboard.ssh.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'smtp':
-        return scoreboard.smtp.check(**opt, timeout=timeout)
+        return scoreboard.smtp.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'dns':
-        return scoreboard.dns.check(**opt, timeout=timeout)
+        return scoreboard.dns.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'http':
-        return scoreboard.http.check(**opt, timeout=timeout)
+        return scoreboard.http.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'ldap':
-        return scoreboard.ldap.check(**opt, timeout=timeout)
+        return scoreboard.ldap.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'pop3':
-        return scoreboard.pop3.check(**opt, timeout=timeout)
+        return scoreboard.pop3.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'imap':
-        return scoreboard.imap.check(**opt, timeout=timeout)
+        return scoreboard.imap.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'mysql':
-        return scoreboard.mysql.check(**opt, timeout=timeout)
+        return scoreboard.mysql.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'tcp':
-        return scoreboard.tcp.check(**opt, timeout=timeout)
+        return scoreboard.tcp.check(timeout=timeout, **opt)
     else:
         raise RuntimeError('config error: proto \'{}\' not found'.format(opt['proto'].lower()))
 
