@@ -32,5 +32,10 @@ def check(addr, port, cert=None, username=None, password=None, list=None, **kwar
                 up = up and imapc.list()[0] == 'OK' and imapc.list()[1] == list
     except imaplib.error:
         up = False
+    finally:
+        try:
+            imapc.logout()
+        except:
+            pass
 
     return up

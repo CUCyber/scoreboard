@@ -26,5 +26,10 @@ def check(addr, port, username, password, **kwargs):
         up = up and stdout.read().decode()[:-1] == username
     except (paramiko.ssh_exception.BadHostKeyException, paramiko.ssh_exception.SSHException, paramiko.ssh_exception.AuthenticationException, socket.error):
         up = False
+    finally:
+        try:
+            sshc.close()
+        except:
+            pass
 
     return up

@@ -22,29 +22,34 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
             context = ssl.create_default_context()
             context.load_cert_chain(cert)
 
-            ftp = ftplib.FTP_TLS(timeout=1, context=context)
+            ftpc = ftplib.FTP_TLS(timeout=1, context=context)
         else:
-            ftp = ftplib.FTP(timeout=1)
+            ftpc = ftplib.FTP(timeout=1)
 
-        ftp.connect(addr, port)
+        ftpc.connect(addr, port)
 
         up = True
 
         if username is not None:
-            ftp.login(username, password)
+            ftpc.login(username, password)
 
         if file is not None:
-            up = file in ftp.nlst()
+            up = file in ftpc.nlst()
 
             buf = io.StringIO()
-            ftp.retrlines('RETR {}'.format(file), buf.write)
+            ftpc.retrlines('RETR {}'.format(file), buf.write)
 
             if contents is not None:
                 up = up and buf.getvalues() == contents
 
         if dne is not None:
-            up = up and nonce not in ftp.nlst()
+            up = up and nonce not in ftpc.nlst()
     except ftplib.all_errors:
         up = False
+    finally:
+        try:
+            ftpc.quit()
+        except:
+            pass
 
     return up

@@ -30,5 +30,10 @@ def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, **k
             up = up and results[0][1]['cn'][0].decode() == cn
     except (ldap.LDAPError, IndexError, KeyError):
         up = False
+    finally:
+        try:
+            ldapc.unbind_s()
+        except:
+            pass
 
     return up

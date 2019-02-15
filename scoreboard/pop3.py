@@ -29,5 +29,10 @@ def check(addr, port, cert=None, username=None, password=None, list=None, **kwar
                 up = popc.list()[0] == 'OK' and popc.list()[1] == list
     except (poplib.error_proto, socket.error):
         up = False
+    finally:
+        try:
+            popc.quit()
+        except:
+            pass
 
     return up

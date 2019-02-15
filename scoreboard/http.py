@@ -37,5 +37,10 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
                 up = up and re.search(regex, httpc.getresponse().read().decode())
     except (http.client.HTTPException, socket.error, AttributeError):
         up = False
+    finally:
+        try:
+            httpc.close()
+        except:
+            pass
 
     return up

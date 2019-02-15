@@ -38,5 +38,10 @@ def check(addr, port, cert=None, username=None, password=None, from_=None, to=No
         up = True
     except smtplib.SMTPException:
         up = False
+    finally:
+        try:
+            smtpc.quit()
+        except:
+            pass
 
     return up

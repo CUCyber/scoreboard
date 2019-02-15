@@ -25,5 +25,14 @@ def check(addr, port, username, password, db='', query=None, result=None, **kwar
                 up = up and cursor.fetchall() == result
     except MySQLdb.Error:
         up = False
+    finally:
+        try:
+            cursor.close()
+        except:
+            pass
+        try:
+            db.close()
+        except:
+            pass
 
     return up
