@@ -13,3 +13,4 @@ services = {
 }
 
 interval = 60
+timeout = 1
