@@ -69,7 +69,7 @@ def main():
 
     sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config.interval,))
+    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config.interval, config.timeout))
     httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     log.info('Scoreboard initialized')

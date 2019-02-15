@@ -9,7 +9,7 @@ import string
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, username=None, password=None, file=None, contents=None, dne=None, **kwargs):
+def check(addr, port, cert=None, username=None, password=None, file=None, contents=None, dne=None, timeout=1, **kwargs):
     log.info(('FTP: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {file}' if file else '')).format(addr=addr, port=port, username=username, file=file))
 
     up = False
@@ -22,9 +22,9 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
             context = ssl.create_default_context()
             context.load_cert_chain(cert)
 
-            ftpc = ftplib.FTP_TLS(timeout=1, context=context)
+            ftpc = ftplib.FTP_TLS(timeout=timeout, context=context)
         else:
-            ftpc = ftplib.FTP(timeout=1)
+            ftpc = ftplib.FTP(timeout=timeout)
 
         ftpc.connect(addr, port)
 

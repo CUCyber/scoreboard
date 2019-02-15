@@ -6,14 +6,14 @@ import ldap
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, **kwargs):
+def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, timeout=1, **kwargs):
     log.info(('LDAP: trying {addr}:{port}' + (' with {dn}' if dn else '') + (' for {base} cn={cn}' if base else '')).format(addr=addr, port=port, dn=dn, base=base, cn=cn))
 
     up = False
 
     try:
         ldapc = ldap.initialize('ldap://{}:{}'.format(addr, port))
-        ldapc.set_option(ldap.OPT_NETWORK_TIMEOUT, 1)
+        ldapc.set_option(ldap.OPT_NETWORK_TIMEOUT, timeout)
 
         up = True
 

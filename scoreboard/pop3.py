@@ -7,13 +7,13 @@ import ssl
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, username=None, password=None, list=None, **kwargs):
+def check(addr, port, cert=None, username=None, password=None, list=None, timeout=1, **kwargs):
     log.info(('POP3: trying {addr}:{port}' + (' with {username}' if username else '')).format(addr=addr, port=port, username=username))
 
     up = False
 
     try:
-        popc = poplib.POP3(addr, port, timeout=1)
+        popc = poplib.POP3(addr, port, timeout=timeout)
 
         if cert is not None:
             context = ssl.create_default_context()

@@ -6,13 +6,13 @@ import MySQLdb
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, username, password, db='', query=None, result=None, **kwargs):
+def check(addr, port, username, password, db='', query=None, result=None, timeout=1, **kwargs):
     log.info(('MySQL: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {db}' if db else '')).format(addr=addr, port=port, username=username, db=db))
 
     up = False
 
     try:
-        db = MySQLdb.connect(addr, username, password, db, port, connect_timeout=1)
+        db = MySQLdb.connect(addr, username, password, db, port, connect_timeout=timeout)
 
         cursor = db.cursor()
 

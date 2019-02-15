@@ -8,7 +8,7 @@ import string
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, username=None, password=None, from_=None, to=None, **kwargs):
+def check(addr, port, cert=None, username=None, password=None, from_=None, to=None, timeout=1, **kwargs):
     log.info(('SMTP: trying {addr}:{port}' + (' with {username}' if username else '') + (' for {from_} -> {to}' if from_ else '')).format(addr=addr, port=port, username=username, from_=from_, to=to))
 
     up = False
@@ -16,7 +16,7 @@ def check(addr, port, cert=None, username=None, password=None, from_=None, to=No
     nonce = ''.join(random.choice(string.ascii_letters) for _ in range(16))
 
     try:
-        smtpc = smtplib.SMTP(timeout=1)
+        smtpc = smtplib.SMTP(timeout=timeout)
         smtpc.connect(addr, port)
         smtpc.ehlo('{}.com'.format(nonce))
 

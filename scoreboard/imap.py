@@ -6,13 +6,13 @@ import ssl
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, username=None, password=None, list=None, **kwargs):
+def check(addr, port, cert=None, username=None, password=None, list=None, timeout=1, **kwargs):
     log.info(('IMAP: trying {addr}:{port}' + (' with {username}' if username else '')).format(addr=addr, port=port, username=username))
 
     up = False
 
     try:
-        #imapc = imaplib.IMAP4(addr, port, timeout=1)
+        #imapc = imaplib.IMAP4(addr, port, timeout=timeout)
         imapc = imaplib.IMAP4(addr, port)
 
         up = True

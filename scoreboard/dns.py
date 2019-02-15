@@ -7,14 +7,14 @@ import dns.resolver
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, hostname, type, answer=None, **kwargs):
+def check(addr, port, hostname, type, answer=None, timeout=1, **kwargs):
     log.info(('DNS: trying {addr}:{port} for {type} {hostname}').format(addr=addr, port=port, type=type, hostname=hostname))
 
     up = False
 
     try:
         dnsc = dns.resolver.Resolver()
-        dnsc.timeout = 1
+        dnsc.timeout = timeout
 
         dnsc.nameservers = [addr]
         dnsc.port = port

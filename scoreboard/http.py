@@ -8,7 +8,7 @@ import ssl
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, cert=None, method=None, headers=None, host=None, url=None, body=None, regex=None, **kwargs):
+def check(addr, port, cert=None, method=None, headers=None, host=None, url=None, body=None, regex=None, timeout=1, **kwargs):
     log.info(('HTTP: trying {addr}:{port}' + (' for {method} {url}' + (' at {host}' if host else '') if method else '')).format(addr=addr, port=port, method=method, url=url, host=host))
 
     up = False
@@ -18,9 +18,9 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
             context = ssl.create_default_context()
             context.load_cert_chain(cert)
 
-            httpc = http.client.HTTPSConnection(addr, port, timeout=1, context=context)
+            httpc = http.client.HTTPSConnection(addr, port, timeout=timeout, context=context)
         else:
-            httpc = http.client.HTTPConnection(addr, port, timeout=1)
+            httpc = http.client.HTTPConnection(addr, port, timeout=timeout)
 
         httpc.connect()
 

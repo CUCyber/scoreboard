@@ -8,7 +8,7 @@ import paramiko.ssh_exception
 log = logging.getLogger('scoreboard')
 
 
-def check(addr, port, username, password, **kwargs):
+def check(addr, port, username, password, timeout=1, **kwargs):
     log.info(('SSH: trying {addr}:{port} with {username}').format(addr=addr, port=port, username=username))
 
     up = False
@@ -17,7 +17,7 @@ def check(addr, port, username, password, **kwargs):
         sshc = paramiko.client.SSHClient()
         sshc.set_missing_host_key_policy(paramiko.client.AutoAddPolicy)
 
-        sshc.connect(addr, port, username, password, timeout=1)
+        sshc.connect(addr, port, username, password, timeout=timeout)
 
         up = True
 
