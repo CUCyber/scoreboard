@@ -1,9 +1,23 @@
 import imaplib
 import logging
+import socket # not needed once imaplib supports timeout
 import ssl
 
 
 log = logging.getLogger('scoreboard')
+
+
+# not needed once imaplib supports timeout
+class IMAP4(imaplib.IMAP4):
+    def _create_socket(self, timeout):
+        host = None if not self.host else self.host
+        return socket.create_connection((host, self.port), timeout)
+
+    def open(self, host='', port=imaplib.IMAP4_PORT, timeout=socket._GLOBAL_DEFAULT_TIMEOUT):
+        self.host = host
+        self.port = port
+        self.sock = self._create_socket(timeout)
+        self.file = self.sock.makefile('rb')
 
 
 def check(addr, port, cert=None, username=None, password=None, list=None, timeout=1, **kwargs):
@@ -13,7 +27,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
 
     try:
         #imapc = imaplib.IMAP4(addr, port, timeout=timeout)
-        imapc = imaplib.IMAP4(addr, port)
+        imapc = IMAP4(addr, port) # not needed once imaplib supports timeout
 
         up = True
 
