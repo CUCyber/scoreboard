@@ -14,9 +14,10 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
     up = False
 
     try:
-        if cert is not None:
+        if cert:
             context = ssl.create_default_context()
-            context.load_cert_chain(cert)
+            if isinstance(cert, str):
+                context.load_cert_chain(cert)
 
             httpc = http.client.HTTPSConnection(addr, port, timeout=timeout, context=context)
         else:

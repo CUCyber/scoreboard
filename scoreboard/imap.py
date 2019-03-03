@@ -1,6 +1,6 @@
 import imaplib
 import logging
-import socket # not needed once imaplib supports timeout
+import socket  # not needed once imaplib supports timeout
 import ssl
 
 
@@ -27,13 +27,14 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
 
     try:
         #imapc = imaplib.IMAP4(addr, port, timeout=timeout)
-        imapc = IMAP4(addr, port) # not needed once imaplib supports timeout
+        imapc = IMAP4(addr, port)  # not needed once imaplib supports timeout
 
         up = True
 
-        if cert is not None:
+        if cert:
             context = ssl.create_default_context()
-            context.load_cert_chain(cert)
+            if isinstance(cert, str):
+                context.load_cert_chain(cert)
 
             imapc.starttls(ssl_context=context)
 

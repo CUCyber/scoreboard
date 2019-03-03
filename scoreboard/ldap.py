@@ -17,8 +17,9 @@ def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, tim
 
         up = True
 
-        if cert is not None:
-            ldapc.set_option(ldap.OPT_X_TLS_CERTFILE, cert)
+        if cert:
+            if isinstance(cert, str):
+                ldapc.set_option(ldap.OPT_X_TLS_CERTFILE, cert)
             ldapc.start_tls_s()
 
         if dn is not None:

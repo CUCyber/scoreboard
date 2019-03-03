@@ -18,9 +18,10 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
         nonce = ''.join(random.choice(string.ascii_letters) for _ in range(16)) + dne
 
     try:
-        if cert is not None:
+        if cert:
             context = ssl.create_default_context()
-            context.load_cert_chain(cert)
+            if isinstance(cert, str):
+                context.load_cert_chain(cert)
 
             ftpc = ftplib.FTP_TLS(timeout=timeout, context=context)
         else:

@@ -20,9 +20,10 @@ def check(addr, port, cert=None, username=None, password=None, from_=None, to=No
         smtpc.connect(addr, port)
         smtpc.ehlo('{}.com'.format(nonce))
 
-        if cert is not None:
+        if cert:
             context = ssl.create_default_context()
-            context.load_cert_chain(cert)
+            if isinstance(cert, str):
+                context.load_cert_chain(cert)
 
             smtpc.starttls(context=context)
 
