@@ -1,5 +1,6 @@
 import ipaddress
 import logging
+import queue
 import time
 
 import scoreboard.ping
@@ -51,6 +52,10 @@ def reload(config):
     log.info('Reloading')
 
     with scoreboard.sync.lock:
+        scoreboard.sync.interval.value = config.interval
+        scoreboard.sync.timeout.value = config.timeout
+        scoreboard.sync.poll.value = config.poll
+
         for name, base in config.teams.items():
             team = []
 
@@ -85,24 +90,35 @@ def reload(config):
             scoreboard.sync.services.append(service)
 
 
-def watch(interval, timeout):
-    while True:
+def worker():
+    while scoreboard.sync.working.value:
+        try:
+            opt = scoreboard.sync.queue.get_nowait()
+        except queue.Empty:
+            time.sleep(scoreboard.sync.poll.value)
+            continue
+
+        if check(opt, scoreboard.sync.timeout.value):
+            with scoreboard.sync.lock:
+                tmp = scoreboard.sync.scores[opt['link'][0]]
+                tmp[opt['link'][1]]['status'] = True
+                tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
+                scoreboard.sync.scores[opt['link'][0]] = tmp
+        else:
+            with scoreboard.sync.lock:
+                tmp = scoreboard.sync.scores[opt['link'][0]]
+                tmp[opt['link'][1]]['status'] = False
+                scoreboard.sync.scores[opt['link'][0]] = tmp
+
+
+def watch():
+    while scoreboard.sync.watching.value:
         log.info('Checking services')
 
         wait = time.time()
 
         for opt in scoreboard.sync.opts:
-            if check(opt, timeout):
-                with scoreboard.sync.lock:
-                    tmp = scoreboard.sync.scores[opt['link'][0]]
-                    tmp[opt['link'][1]]['status'] = True
-                    tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
-                    scoreboard.sync.scores[opt['link'][0]] = tmp
-            else:
-                with scoreboard.sync.lock:
-                    tmp = scoreboard.sync.scores[opt['link'][0]]
-                    tmp[opt['link'][1]]['status'] = False
-                    scoreboard.sync.scores[opt['link'][0]] = tmp
+            scoreboard.sync.queue.put(opt)
 
-        while time.time() - wait < interval:
-            time.sleep(1)
+        while scoreboard.sync.watching.value and time.time() - wait < scoreboard.sync.interval.value:
+            time.sleep(scoreboard.sync.poll.value)

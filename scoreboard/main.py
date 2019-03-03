@@ -69,12 +69,18 @@ def main():
 
     sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    svcd = multiprocessing.Process(target=scoreboard.poll.watch, args=(config.interval, config.timeout))
+    svcd = multiprocessing.Process(target=scoreboard.poll.watch)
+    workers = [multiprocessing.Process(target=scoreboard.poll.worker) for i in range(config.workers)]
     httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     log.info('Scoreboard initialized')
 
+    scoreboard.sync.watching.value = True
+    scoreboard.sync.working.value = True
+
     svcd.start()
+    for worker in workers:
+        worker.start()
     httpd.start()
 
     signal.signal(signal.SIGINT, sigint)
@@ -89,20 +95,41 @@ def main():
             wait = time.time()
 
             if os.stat(args.config).st_mtime > last:
+                previous = config
+
                 config = load(args.config)
                 scoreboard.poll.reload(config)
 
+                if previous.workers != config.workers:
+                    log.info('Restarting workers')
+
+                    scoreboard.sync.working.value = False
+
+                    for worker in workers:
+                        worker.join()
+
+                    workers = [multiprocessing.Process(target=scoreboard.poll.worker) for i in range(config.workers)]
+
+                    scoreboard.sync.working.value = True
+
+                    for worker in workers:
+                        worker.start()
+
                 last = os.stat(args.config).st_mtime
 
-            while time.time() - wait < config.interval:
+            while time.time() - wait < config.poll:
                 time.sleep(1)
     except KeyboardInterrupt:
         sys.stdout.write('\n')
     except SystemExit:
         pass
 
-    svcd.terminate()
+    scoreboard.sync.watching.value = False
+    scoreboard.sync.working.value = False
+
     svcd.join()
+    for worker in workers:
+        worker.join()
 
     httpd.close()
 
