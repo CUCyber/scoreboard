@@ -78,6 +78,11 @@ def reload(config):
                 opt.update(opts)
 
                 team.append(score)
+
+                for prev in scoreboard.sync.opts:
+                    if prev['addr'] == opt['addr'] and prev['port'] == opt['port']:
+                        scoreboard.sync.opts.remove(prev)
+                        break
                 scoreboard.sync.opts.append(opt)
 
             if name not in scoreboard.sync.teams:
