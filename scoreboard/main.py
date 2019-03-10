@@ -71,7 +71,7 @@ def main():
 
     svcd = multiprocessing.Process(target=scoreboard.poll.watch)
     workers = [multiprocessing.Process(target=scoreboard.poll.worker) for i in range(config.workers)]
-    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
+    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(config, args.template), '/json': scoreboard.scoreboard.gen_json(config)}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
 
     log.info('Scoreboard initialized')
 

@@ -1,5 +1,6 @@
 import os
 
+import fooster.web.json
 import fooster.web.page
 
 import scoreboard.sync
@@ -23,3 +24,21 @@ def gen(config, template):
                 return page.format(refresh=Scoreboard.interval, scoreboard=html)
 
     return Scoreboard
+
+
+def gen_json(config):
+    class ScoreboardJSON(fooster.web.json.JSONHandler):
+        def do_get(self):
+            with scoreboard.sync.lock:
+                return 200, {
+                    'services': list(scoreboard.sync.services),
+                    'teams': list(scoreboard.sync.teams),
+                    'scores': {
+                        name: {
+                            'score': sum(score['score'] for score in scoreboard.sync.scores[name]),
+                            'services': {score['service']: score['status'] for score in scoreboard.sync.scores[name] if score['service'] in scoreboard.sync.services},
+                        } for name in scoreboard.sync.teams
+                    },
+                }
+
+    return ScoreboardJSON
