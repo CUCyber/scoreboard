@@ -120,7 +120,7 @@ def main():
             while time.time() - wait < config.poll:
                 time.sleep(1)
     except KeyboardInterrupt:
-        sys.stdout.write('\n')
+        sys.stderr.write('\n')
     except SystemExit:
         pass
 
