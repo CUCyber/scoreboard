@@ -27,7 +27,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
 
     try:
         #imapc = imaplib.IMAP4(addr, port, timeout=timeout)
-        imapc = IMAP4(addr, port)  # not needed once imaplib supports timeout
+        imapc = IMAP4(addr, port, timeout=timeout)  # not needed once imaplib supports timeout
 
         up = True
 
