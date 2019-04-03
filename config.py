@@ -16,3 +16,4 @@ interval = 60
 timeout = 1
 poll = 1
 workers = 4
+show = True

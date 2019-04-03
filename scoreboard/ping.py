@@ -12,7 +12,7 @@ def check(addr, **kwargs):
     up = False
 
     try:
-        if os.name == 'nt'
+        if os.name == 'nt':
             up = subprocess.call(['ping', '-w', '100', '-n', '4', addr], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
         else:
             up = subprocess.call(['ping', '-i0.1', '-c4', addr], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT) == 0
