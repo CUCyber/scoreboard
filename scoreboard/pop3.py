@@ -16,11 +16,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
         popc = poplib.POP3(addr, port, timeout=timeout)
 
         if cert:
-            context = ssl.create_default_context()
-            if isinstance(cert, str):
-                context.load_cert_chain(cert)
-
-            popc.stls(context=context)
+            popc.stls(context=ssl.create_default_context(cafile=cert))
 
         if username is not None:
             popc.user(username)

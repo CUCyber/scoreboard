@@ -21,11 +21,7 @@ def check(addr, port, cert=None, username=None, password=None, from_=None, to=No
         smtpc.ehlo('{}.com'.format(nonce))
 
         if cert:
-            context = ssl.create_default_context()
-            if isinstance(cert, str):
-                context.load_cert_chain(cert)
-
-            smtpc.starttls(context=context)
+            smtpc.starttls(context=ssl.create_default_context(cafile=cert))
 
         if username is not None:
             smtpc.login(username, password)

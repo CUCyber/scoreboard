@@ -19,11 +19,7 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
 
     try:
         if cert:
-            context = ssl.create_default_context()
-            if isinstance(cert, str):
-                context.load_cert_chain(cert)
-
-            ftpc = ftplib.FTP_TLS(timeout=timeout, context=context)
+            ftpc = ftplib.FTP_TLS(timeout=timeout, context=ssl.create_default_context(cafile=cert))
         else:
             ftpc = ftplib.FTP(timeout=timeout)
 
