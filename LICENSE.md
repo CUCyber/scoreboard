@@ -1,6 +1,6 @@
 ## The MIT License
 
-Copyright (c) 2018, CU Cyber <cyber@clemson.edu>
+Copyright (c) 2019, CU Cyber <cyber@clemson.edu>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
