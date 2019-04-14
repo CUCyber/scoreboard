@@ -56,6 +56,7 @@ def reload(config):
         scoreboard.sync.interval.value = config.interval
         scoreboard.sync.timeout.value = config.timeout
         scoreboard.sync.poll.value = config.poll
+        scoreboard.sync.show.value = config.show
 
         for name, base in config.teams.items():
             team = []
