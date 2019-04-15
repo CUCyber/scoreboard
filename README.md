@@ -87,7 +87,7 @@ teams['Team4'] = '10.0.133.0'
 
 ### Services
 
-Services are identified by a name that maps to a configuration for how the scoreboard should score the service. This includes at a minimum the protocol to score with and the IP address offset of the service relative to each team's base IP address. Any protocol option can be a list that when found will generate a random index and use the same index for all lists in the service for all teams.
+Services are identified by a name that maps to a configuration for how the scoreboard should score the service. This includes at a minimum the protocol to score with and the IP address offset of the service relative to each team's base IP address. Any protocol option can be a list that when found will generate a random index each poll interval and use the same index for all lists in the service for all teams.
 
 
 ### Example
