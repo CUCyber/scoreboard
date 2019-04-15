@@ -67,6 +67,156 @@ $ ./setup.py install
 ```
 
 
+## Configuring
+
+### Teams
+
+Each team is identified by a name that maps to a base IP address from which the offset for each service will be added. Generally this will be the base address in the CIDR notation for each team's network (without the mask). This assumes that each service is at the same offset for each team.
+
+
+#### Example
+
+```python
+teams = collections.OrderedDict()
+teams['Team1'] = '10.0.130.0'
+teams['Team2'] = '10.0.131.0'
+teams['Team3'] = '10.0.132.0'
+teams['Team4'] = '10.0.133.0'
+```
+
+
+### Services
+
+Services are identified by a name that maps to a configuration for how the scoreboard should score the service. This includes at a minimum the protocol to score with and the IP address offset of the service relative to each team's base IP address.
+
+
+### Example
+
+```python
+services = collections.OrderedDict()
+services['FTP'] = {'proto': 'ftp', 'offset': 5, 'port': 21, 'file': 'DONOTDELETE', 'contents': 'asdf', 'dne': 'DOESNOTEXIST'}
+services['SSH'] = {'proto': 'ssh', 'offset': 6, 'port': 22, 'username': 'asdf', 'password': 'asdf'}
+services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': '/', 'regex': r'asdf'}
+services['MySQL'] = {'proto': 'mysql', 'offset': 8, 'port': 3306, 'username': 'asdf', 'password': 'asdf', 'db': ''}
+```
+
+
+### Ping
+
+#### Options
+
+None
+
+
+### TCP
+
+#### Options
+
+* `port`
+
+
+### DNS
+
+#### Options
+
+* `port`
+* `hostname`
+
+
+### FTP
+
+#### Options
+
+* `port`
+* `cert` (optional; uses FTPS)
+* `username` (optional; uses login information)
+* `password` (optional; uses login information)
+* `file` (optional; checks for contents of file)
+* `contents` (optional; checks for contents of file)
+* `dne` (optional; checks for lack of file)
+
+
+### HTTP
+
+#### Options
+
+* `port`
+* `cert` (optional; uses HTTPS)
+* `method` (optional; sends HTTP request)
+* `headers` (optional; sends HTTP headers)
+* `host` (optional; sends HTTP Host header)
+* `url` (optional; sends HTTP request)
+* `body` (optional; sends HTTP request body)
+* `regex` (optional; regular expression to check for in the HTTP response)
+
+
+### IMAP
+
+#### Options
+
+* `port`
+* `cert` (optional; uses STARTTLS)
+* `username` (optional; uses login information)
+* `password` (optional; uses login information)
+* `list` (optional; checks for email list)
+
+
+### LDAP
+
+#### Options
+
+* `port`
+* `cert` (optional; uses STARTTLS)
+* `dn` (optional; uses simple bind)
+* `password` (optional; uses simple bind)
+* `base` (optional; searches for common name under base name)
+* `cn` (optional; searches for common name under base name)
+
+
+### MySQL
+
+#### Options
+
+* `port`
+* `username`
+* `password`
+* `db` (optional; uses database)
+* `query` (optional; executes and checks query)
+* `result` (optional; executes and checks query)
+
+
+### POP3
+
+#### Options
+
+* `port`
+* `cert` (optional; uses STARTTLS)
+* `username` (optional; uses login information)
+* `password` (optional; uses login information)
+* `list` (optional; checks for email list)
+
+
+### SMTP
+
+#### Options
+
+* `port`
+* `cert` (optional; uses STARTTLS)
+* `username` (optional; uses login information)
+* `password` (optional; uses login information)
+* `from_` (optional; attempts to send an email)
+* `to` (optional; attempts to send an email)
+
+
+### SSH
+
+#### Options
+
+* `port`
+* `username`
+* `password`
+
+
 ## Running
 
 ```sh

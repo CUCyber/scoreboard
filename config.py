@@ -9,7 +9,7 @@ teams['Team4'] = '10.0.133.0'
 services = collections.OrderedDict()
 services['FTP'] = {'proto': 'ftp', 'offset': 5, 'port': 21, 'file': 'DONOTDELETE', 'contents': 'asdf', 'dne': 'DOESNOTEXIST'}
 services['SSH'] = {'proto': 'ssh', 'offset': 6, 'port': 22, 'username': 'asdf', 'password': 'asdf'}
-services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': ['/', '/test1', '/test2'], 'regex': ['asdf', 'asdf1', 'asdf2']}
+services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': ['/', '/test1', '/test2'], 'regex': [r'asdf', r'asdf1', r'asdf2']}
 services['MySQL'] = {'proto': 'mysql', 'offset': 8, 'port': 3306, 'username': 'asdf', 'password': 'asdf', 'db': ''}
 
 interval = 60
