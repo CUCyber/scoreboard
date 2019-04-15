@@ -69,6 +69,21 @@ $ ./setup.py install
 
 ## Configuring
 
+### Options
+
+...
+
+```python
+score = True
+
+interval = 60
+timeout = 3
+poll = 1
+workers = 4
+show = True
+```
+
+
 ### Teams
 
 Each team is identified by a name that maps to a base IP address from which the offset for each service will be added. Generally this will be the base address in the CIDR notation for each team's network (without the mask). This assumes that each service is at the same offset for each team.

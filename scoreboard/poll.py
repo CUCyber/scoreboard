@@ -53,6 +53,8 @@ def reload(config):
     log.info('Reloading')
 
     with scoreboard.sync.lock:
+        scoreboard.sync.score.value = config.score
+
         scoreboard.sync.interval.value = config.interval
         scoreboard.sync.timeout.value = config.timeout
         scoreboard.sync.poll.value = config.poll
@@ -109,7 +111,8 @@ def worker():
             with scoreboard.sync.lock:
                 tmp = scoreboard.sync.scores[opt['link'][0]]
                 tmp[opt['link'][1]]['status'] = True
-                tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
+                if scoreboard.sync.score.value:
+                    tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
                 scoreboard.sync.scores[opt['link'][0]] = tmp
         else:
             with scoreboard.sync.lock:

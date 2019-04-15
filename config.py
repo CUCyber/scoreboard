@@ -12,6 +12,8 @@ services['SSH'] = {'proto': 'ssh', 'offset': 6, 'port': 22, 'username': 'asdf', 
 services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': ['/', '/test1', '/test2'], 'regex': [r'asdf', r'asdf1', r'asdf2']}
 services['MySQL'] = {'proto': 'mysql', 'offset': 8, 'port': 3306, 'username': 'asdf', 'password': 'asdf', 'db': ''}
 
+score = True
+
 interval = 60
 timeout = 1
 poll = 1
