@@ -32,7 +32,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
         up = True
 
         if cert:
-            imapc.starttls(ssl_context=ssl.create_default_context(cafile=cert))
+            imapc.starttls(ssl_context=ssl.create_default_context(cafile=cert) if isinstance(cert, str) else ssl.create_default_context())
 
         if username is not None:
             imapc.login(username, password)

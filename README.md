@@ -128,7 +128,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses FTPS)
+* `cert` (optional; uses FTPS; boolean or string path of CA certificate)
 * `username` (optional; uses login information)
 * `password` (optional; uses login information)
 * `file` (optional; checks for contents of file)
@@ -141,7 +141,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses HTTPS)
+* `cert` (optional; uses HTTPS; boolean or string path of CA certificate)
 * `method` (optional; sends HTTP request)
 * `headers` (optional; sends HTTP headers)
 * `host` (optional; sends HTTP Host header)
@@ -155,7 +155,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses STARTTLS)
+* `cert` (optional; uses STARTTLS; boolean or string path of CA certificate)
 * `username` (optional; uses login information)
 * `password` (optional; uses login information)
 * `list` (optional; checks for email list)
@@ -166,7 +166,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses STARTTLS)
+* `cert` (optional; uses STARTTLS; boolean or string path of CA certificate)
 * `dn` (optional; uses simple bind)
 * `password` (optional; uses simple bind)
 * `base` (optional; searches for common name under base name)
@@ -190,7 +190,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses STARTTLS)
+* `cert` (optional; uses STARTTLS; boolean or string path of CA certificate)
 * `username` (optional; uses login information)
 * `password` (optional; uses login information)
 * `list` (optional; checks for email list)
@@ -201,7 +201,7 @@ None
 #### Options
 
 * `port`
-* `cert` (optional; uses STARTTLS)
+* `cert` (optional; uses STARTTLS; boolean or string path of CA certificate)
 * `username` (optional; uses login information)
 * `password` (optional; uses login information)
 * `from_` (optional; attempts to send an email)

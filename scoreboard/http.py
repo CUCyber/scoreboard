@@ -15,7 +15,7 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
 
     try:
         if cert:
-            httpc = http.client.HTTPSConnection(addr, port, timeout=timeout, context=ssl.create_default_context(cafile=cert))
+            httpc = http.client.HTTPSConnection(addr, port, timeout=timeout, context=ssl.create_default_context(cafile=cert) if isinstance(cert, str) else ssl.create_default_context())
         else:
             httpc = http.client.HTTPConnection(addr, port, timeout=timeout)
 
