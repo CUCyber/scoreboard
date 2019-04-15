@@ -87,7 +87,7 @@ teams['Team4'] = '10.0.133.0'
 
 ### Services
 
-Services are identified by a name that maps to a configuration for how the scoreboard should score the service. This includes at a minimum the protocol to score with and the IP address offset of the service relative to each team's base IP address.
+Services are identified by a name that maps to a configuration for how the scoreboard should score the service. This includes at a minimum the protocol to score with and the IP address offset of the service relative to each team's base IP address. Any protocol option can be a list that when found will generate a random index and use the same index for all lists in the service for all teams.
 
 
 ### Example
@@ -96,7 +96,7 @@ Services are identified by a name that maps to a configuration for how the score
 services = collections.OrderedDict()
 services['FTP'] = {'proto': 'ftp', 'offset': 5, 'port': 21, 'file': 'DONOTDELETE', 'contents': 'asdf', 'dne': 'DOESNOTEXIST'}
 services['SSH'] = {'proto': 'ssh', 'offset': 6, 'port': 22, 'username': 'asdf', 'password': 'asdf'}
-services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': '/', 'regex': r'asdf'}
+services['HTTP'] = {'proto': 'http', 'offset': 7, 'port': 80, 'method': 'GET', 'url': ['/', '/test1', '/test2'], 'regex': [r'asdf', r'asdf1', r'asdf2']}
 services['MySQL'] = {'proto': 'mysql', 'offset': 8, 'port': 3306, 'username': 'asdf', 'password': 'asdf', 'db': ''}
 ```
 
