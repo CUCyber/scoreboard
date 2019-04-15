@@ -124,20 +124,21 @@ def watch():
 
         wait = time.time()
 
-        idx = {}
-        for opt in scoreboard.sync.opts:
-            probe = {}
+        with scoreboard.sync.lock:
+            idx = {}
+            for opt in scoreboard.sync.opts:
+                probe = {}
 
-            for key, val in opt.items():
-                if isinstance(val, list):
-                    service = scoreboard.sync.scores[opt['link'][0]][opt['link'][1]]['service']
-                    if service not in idx:
-                        idx[service] = random.randint(0, len(val) - 1)
-                    probe[key] = val[idx[service]]
-                else:
-                    probe[key] = val
+                for key, val in opt.items():
+                    if isinstance(val, list):
+                        service = scoreboard.sync.scores[opt['link'][0]][opt['link'][1]]['service']
+                        if service not in idx:
+                            idx[service] = random.randint(0, len(val) - 1)
+                        probe[key] = val[idx[service]]
+                    else:
+                        probe[key] = val
 
-            scoreboard.sync.queue.put(probe)
+                scoreboard.sync.queue.put(probe)
 
         while scoreboard.sync.watching.value and time.time() - wait < scoreboard.sync.interval.value:
             time.sleep(scoreboard.sync.poll.value)
