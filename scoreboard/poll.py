@@ -14,6 +14,7 @@ import scoreboard.ldap
 import scoreboard.pop3
 import scoreboard.imap
 import scoreboard.mysql
+import scoreboard.sftp
 import scoreboard.tcp
 
 import scoreboard.sync
@@ -43,6 +44,8 @@ def check(opt, timeout):
         return scoreboard.imap.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'mysql':
         return scoreboard.mysql.check(timeout=timeout, **opt)
+    elif opt['proto'].lower() == 'sftp':
+        return scoreboard.sftp.check(timeout=timeout, **opt)
     elif opt['proto'].lower() == 'tcp':
         return scoreboard.tcp.check(timeout=timeout, **opt)
     else:

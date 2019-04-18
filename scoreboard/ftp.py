@@ -31,10 +31,14 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
             ftpc.login(username, password)
 
         if file is not None:
-            up = file in ftpc.nlst()
+            up = up and file in ftpc.nlst()
 
-            buf = io.StringIO()
-            ftpc.retrlines('RETR {}'.format(file), buf.write)
+            if isinstance(contents, str):
+                buf = io.StringIO()
+                ftpc.retrlines('RETR {}'.format(file), buf.write)
+            else:
+                buf = io.BytesIO()
+                ftpc.retrbinary('RETR {}'.format(file), buf.write)
 
             if contents is not None:
                 up = up and buf.getvalues() == contents

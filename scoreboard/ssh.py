@@ -23,7 +23,7 @@ def check(addr, port, username, password, timeout=1, **kwargs):
 
         stdin, stdout, stderr = sshc.exec_command('whoami', timeout=timeout)
 
-        up = up and stdout.read().decode()[:-1] == username
+        up = up and stdout.read().decode().strip() == username
     except (paramiko.ssh_exception.BadHostKeyException, paramiko.ssh_exception.SSHException, paramiko.ssh_exception.AuthenticationException, socket.error, EOFError):
         up = False
     finally:

@@ -211,6 +211,18 @@ None
 * `list` (optional; checks for email list)
 
 
+### SFTP
+
+#### Options
+
+* `port`
+* `username`
+* `password`
+* `file` (optional; checks for contents of file)
+* `contents` (optional; checks for contents of file)
+* `dne` (optional; checks for lack of file)
+
+
 ### SMTP
 
 #### Options
