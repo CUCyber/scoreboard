@@ -135,7 +135,9 @@ None
 #### Options
 
 * `port`
-* `hostname`
+* `hostname` (name to lookup)
+* `type` (type of lookup)
+* `answer` (optional; checks for response)
 
 
 ### FTP
@@ -193,8 +195,8 @@ None
 #### Options
 
 * `port`
-* `username`
-* `password`
+* `username` (uses login information)
+* `password` (uses login information)
 * `db` (optional; uses database)
 * `query` (optional; executes and checks query)
 * `result` (optional; executes and checks query)
@@ -216,8 +218,8 @@ None
 #### Options
 
 * `port`
-* `username`
-* `password`
+* `username` (uses login information)
+* `password` (uses login information)
 * `file` (optional; checks for contents of file)
 * `contents` (optional; checks for contents of file)
 * `dne` (optional; checks for lack of file)
@@ -231,8 +233,8 @@ None
 * `cert` (optional; uses STARTTLS; boolean or string path of CA certificate)
 * `username` (optional; uses login information)
 * `password` (optional; uses login information)
-* `from_` (optional; attempts to send an email)
-* `to` (optional; attempts to send an email)
+* `from_` (optional; attempts to prepare an email which does not get sent)
+* `to` (optional; attempts to prepare an email which does not get sent)
 
 
 ### SSH
@@ -240,8 +242,8 @@ None
 #### Options
 
 * `port`
-* `username`
-* `password`
+* `username` (uses login information)
+* `password` (uses login information)
 
 
 ## Running
