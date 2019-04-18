@@ -71,7 +71,7 @@ $ ./setup.py install
 
 ### Options
 
-...
+All options are reconfigurable at runtime by modifying the original configuration file specified on the command line. This is especially useful for starting and stopping scoring by using the `score` option at runtime. Other options adjust polling interval (`interval`), service connect timeout (`timeout`), how often to poll for configuration changes (`poll`), how many workers processes to spawn (`workers`), and whether to show scores in the HTML and JSON interface (`show`).
 
 ```python
 score = True
