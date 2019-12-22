@@ -82,12 +82,12 @@ def main():
         worker.start()
     httpd.start()
 
+    last = os.stat(args.config).st_mtime
+
     signal.signal(signal.SIGINT, sigint)
 
     signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit())
     signal.signal(signal.SIGUSR1, lambda signum, frame: output())
-
-    last = os.stat(args.config).st_mtime
 
     try:
         while True:
@@ -116,7 +116,7 @@ def main():
 
                 last = os.stat(args.config).st_mtime
 
-            while time.time() - wait < config.poll:
+            while time.time() - wait < scoreboard.sync.poll.value:
                 time.sleep(1)
     except KeyboardInterrupt:
         sys.stderr.write('\n')

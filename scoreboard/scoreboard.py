@@ -1,3 +1,4 @@
+import html
 import os
 
 import fooster.web.json
@@ -13,20 +14,20 @@ def gen(template):
 
         def format(self, page):
             with scoreboard.sync.lock:
-                html = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(service) for service in scoreboard.sync.services)
+                table = '<table>\n\t<thead>\n\t\t<tr>\n\t\t\t<th>Name</th>' + ''.join('<th>{}</th>'.format(html.escape(service)) for service in scoreboard.sync.services)
                 if scoreboard.sync.show.value:
-                    html += '<th>Score</th>'
-                html += '\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
+                    table += '<th>Score</th>'
+                table += '\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
 
                 for name in scoreboard.sync.teams:
-                    html += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(name) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in scoreboard.sync.scores[name] if score['service'] in scoreboard.sync.services)
+                    table += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(html.escape(name)) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in scoreboard.sync.scores[name] if score['service'] in scoreboard.sync.services)
                     if scoreboard.sync.show.value:
-                        html += '<td>{}</td>'.format(sum(score['score'] for score in scoreboard.sync.scores[name]))
-                    html += '\n\t\t</tr>'
+                        table += '<td>{}</td>'.format(sum(score['score'] for score in scoreboard.sync.scores[name]))
+                    table += '\n\t\t</tr>'
 
-                html += '\n\t</tbody>\n</table>'
+                table += '\n\t</tbody>\n</table>'
 
-                return page.format(refresh=scoreboard.sync.interval.value, scoreboard=html)
+                return page.format(refresh=scoreboard.sync.interval.value, scoreboard=table)
 
     return Scoreboard
 
