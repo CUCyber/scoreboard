@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='scoreboard',
-    version='0.1.0',
+    version='0.2.0',
     description='a scoreboard for verifying and scoring services in a red vs. blue competition',
     license='MIT',
     author='CU Cyber',
