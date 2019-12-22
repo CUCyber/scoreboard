@@ -17,7 +17,7 @@ A scoreboard for verifying and scoring services in a red vs. blue competition.
 ### Debian/Ubuntu/Kali
 
 ```sh
-$ sudo apt install build-essential python3 python3-setuptools python3-cffi libldap2-dev libmariadb-dev python3-dev libsasl2-dev zlib1g-dev libssl-dev
+$ sudo apt install build-essential python3 python3-dev python3-setuptools python3-cffi libsasl2-dev zlib1g-dev libssl-dev libldap2-dev libmariadb-dev
 $ sudo ./setup.py install
 ```
 
