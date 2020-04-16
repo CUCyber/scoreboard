@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='scoreboard',
-    version='0.2.0',
+    version='0.3.0',
     description='a scoreboard for verifying and scoring services in a red vs. blue competition',
     license='MIT',
     author='CU Cyber',
@@ -12,5 +12,5 @@ setup(
     install_requires=['fooster-web', 'dnspython', 'python-ldap', 'mysqlclient', 'paramiko'],
     packages=find_packages(),
     package_data={'': ['html/*.*']},
-    entry_points={'console_scripts': ['scoreboard = scoreboard.main:main']},
+    entry_points={'console_scripts': ['scoreboard = scoreboard.__main__:main']},
 )

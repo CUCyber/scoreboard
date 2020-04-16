@@ -46,7 +46,7 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
     finally:
         try:
             imapc.logout()
-        except:
+        except Exception:
             pass
 
     return up

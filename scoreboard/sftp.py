@@ -1,5 +1,7 @@
 import logging
+import random
 import socket
+import string
 
 import paramiko.client
 import paramiko.sftp_client
@@ -44,7 +46,7 @@ def check(addr, port, username, password, file=None, contents=None, dne=None, ti
     finally:
         try:
             sshc.close()
-        except:
+        except Exception:
             pass
 
     return up

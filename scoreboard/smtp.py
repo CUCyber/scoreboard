@@ -38,7 +38,7 @@ def check(addr, port, cert=None, username=None, password=None, from_=None, to=No
     finally:
         try:
             smtpc.quit()
-        except:
+        except Exception:
             pass
 
     return up

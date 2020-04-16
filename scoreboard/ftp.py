@@ -50,7 +50,7 @@ def check(addr, port, cert=None, username=None, password=None, file=None, conten
     finally:
         try:
             ftpc.quit()
-        except:
+        except Exception:
             pass
 
     return up

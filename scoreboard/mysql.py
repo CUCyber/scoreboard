@@ -28,11 +28,11 @@ def check(addr, port, username, password, db='', query=None, result=None, timeou
     finally:
         try:
             cursor.close()
-        except:
+        except Exception:
             pass
         try:
             db.close()
-        except:
+        except Exception:
             pass
 
     return up

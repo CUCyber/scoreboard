@@ -29,7 +29,7 @@ def check(addr, port, username, password, timeout=1, **kwargs):
     finally:
         try:
             sshc.close()
-        except:
+        except Exception:
             pass
 
     return up

@@ -40,7 +40,7 @@ def check(addr, port, cert=None, method=None, headers=None, host=None, url=None,
     finally:
         try:
             httpc.close()
-        except:
+        except Exception:
             pass
 
     return up
