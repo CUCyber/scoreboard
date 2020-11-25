@@ -5,7 +5,7 @@ import paramiko.client
 import paramiko.ssh_exception
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, username, password, timeout=1, **kwargs):

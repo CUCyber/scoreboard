@@ -27,7 +27,7 @@ $ sudo ./setup.py install
 ```sh
 $ sudo yum groupinstall "Development Tools"
 $ sudo yum install epel-release
-$ sudo yum install python34 python34-devel python34-setuptools python34-cffi openldap-devel mariadb-devel
+$ sudo yum install python36 python36-devel python36-setuptools python36-cffi openldap-devel mariadb-devel
 $ sudo ./setup.py install
 ```
 

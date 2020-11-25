@@ -3,7 +3,7 @@ import logging
 import socket
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, timeout=1, **kwargs):

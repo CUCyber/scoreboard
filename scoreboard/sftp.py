@@ -8,7 +8,7 @@ import paramiko.sftp_client
 import paramiko.ssh_exception
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, username, password, file=None, contents=None, dne=None, timeout=1, **kwargs):

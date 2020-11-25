@@ -3,7 +3,7 @@ import os
 import subprocess
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, **kwargs):

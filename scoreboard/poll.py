@@ -20,7 +20,7 @@ import scoreboard.tcp
 import scoreboard.sync
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(opt, timeout):
@@ -52,16 +52,16 @@ def check(opt, timeout):
         raise RuntimeError('config error: proto \'{}\' not found'.format(opt['proto'].lower()))
 
 
-def reload(config):
+def reload(sync, config):
     log.info('Reloading')
 
-    with scoreboard.sync.lock:
-        scoreboard.sync.score.value = config.score
+    with sync.lock:
+        sync.score.value = config.score
 
-        scoreboard.sync.interval.value = config.interval
-        scoreboard.sync.timeout.value = config.timeout
-        scoreboard.sync.poll.value = config.poll
-        scoreboard.sync.show.value = config.show
+        sync.interval.value = config.interval
+        sync.timeout.value = config.timeout
+        sync.poll.value = config.poll
+        sync.show.value = config.show
 
         for name, base in config.teams.items():
             team = []
@@ -72,8 +72,8 @@ def reload(config):
                         opts['answer'] = str(ipaddress.IPv4Address(base) + opts['answer'])
 
                 addr = str(ipaddress.IPv4Address(base) + opts['offset'])
-                if name in scoreboard.sync.scores:
-                    for prev in scoreboard.sync.scores[name]:
+                if name in sync.scores:
+                    for prev in sync.scores[name]:
                         if prev['service'] == service:
                             score = {'service': service, 'addr': addr, 'status': prev['status'], 'score': prev['score']}
                             break
@@ -86,65 +86,69 @@ def reload(config):
 
                 team.append(score)
 
-                for prev in scoreboard.sync.opts:
+                for prev in sync.opts:
                     if prev['addr'] == opt['addr'] and prev['port'] == opt['port']:
-                        scoreboard.sync.opts.remove(prev)
+                        sync.opts.remove(prev)
                         break
-                scoreboard.sync.opts.append(opt)
+                sync.opts.append(opt)
 
-            if name not in scoreboard.sync.teams:
-                scoreboard.sync.teams.append(name)
-            scoreboard.sync.scores[name] = team
+            if name not in sync.teams:
+                sync.teams.append(name)
+            sync.scores[name] = team
 
-        del scoreboard.sync.services[:]
+        for name in sync.teams:
+            if name not in config.teams:
+                sync.teams.remove(name)
+
+        del sync.services[:]
 
         for service in config.services.keys():
-            scoreboard.sync.services.append(service)
+            sync.services.append(service)
 
 
-def worker():
-    while scoreboard.sync.working.value:
+def worker(sync):
+    while sync.working.value:
         try:
-            opt = scoreboard.sync.queue.get_nowait()
+            opt = sync.queue.get_nowait()
         except queue.Empty:
-            time.sleep(scoreboard.sync.poll.value)
+            time.sleep(sync.poll.value)
             continue
 
-        if check(opt, scoreboard.sync.timeout.value):
-            with scoreboard.sync.lock:
-                tmp = scoreboard.sync.scores[opt['link'][0]]
+        if check(opt, sync.timeout.value):
+            with sync.lock:
+                tmp = sync.scores[opt['link'][0]]
                 tmp[opt['link'][1]]['status'] = True
-                if scoreboard.sync.score.value:
+                if sync.score.value:
                     tmp[opt['link'][1]]['score'] += opt['weight'] if 'weight' in opt else 1
-                scoreboard.sync.scores[opt['link'][0]] = tmp
+                sync.scores[opt['link'][0]] = tmp
         else:
-            with scoreboard.sync.lock:
-                tmp = scoreboard.sync.scores[opt['link'][0]]
+            with sync.lock:
+                tmp = sync.scores[opt['link'][0]]
                 tmp[opt['link'][1]]['status'] = False
-                scoreboard.sync.scores[opt['link'][0]] = tmp
+                sync.scores[opt['link'][0]] = tmp
 
 
-def watch():
-    while scoreboard.sync.watching.value:
+def watch(sync):
+    while sync.watching.value:
         log.info('Checking services')
 
         wait = time.time()
 
-        with scoreboard.sync.lock:
+        with sync.lock:
             idx = {}
-            for opt in scoreboard.sync.opts:
+            for opt in sync.opts:
                 probe = {}
 
                 for key, val in opt.items():
                     if isinstance(val, list):
-                        service = scoreboard.sync.scores[opt['link'][0]][opt['link'][1]]['service']
+                        service = sync.scores[opt['link'][0]][opt['link'][1]]['service']
                         if service not in idx:
                             idx[service] = random.randint(0, len(val) - 1)
                         probe[key] = val[idx[service]]
                     else:
                         probe[key] = val
 
-                scoreboard.sync.queue.put(probe)
+                sync.queue.put(probe)
 
-        while scoreboard.sync.watching.value and time.time() - wait < scoreboard.sync.interval.value:
-            time.sleep(scoreboard.sync.poll.value)
+        while sync.watching.value and time.time() - wait < sync.interval.value:
+            time.sleep(sync.poll.value)

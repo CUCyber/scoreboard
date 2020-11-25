@@ -14,6 +14,12 @@ import scoreboard.scoreboard
 import scoreboard.sync
 
 
+if sys.version_info >= (3, 7):
+    start_method = 'spawn'
+else:
+    start_method = 'fork'
+
+
 def load(path):
     try:
         import importlib.util
@@ -29,8 +35,8 @@ def load(path):
     return config
 
 
-def output():
-    json.dump(scoreboard.sync.scores.copy(), sys.stdout, indent=2)
+def output(sync):
+    json.dump(sync.scores.copy(), sys.stdout, indent=2)
     sys.stdout.write('\n')
 
 
@@ -45,37 +51,27 @@ def main():
 
     args = parser.parse_args()
 
-    web_log = logging.getLogger('web')
-
-    web_log_handler = logging.StreamHandler(sys.stderr)
-    web_log.addHandler(web_log_handler)
-    web_log.setLevel(logging.INFO)
-
-    http_log = logging.getLogger('http')
-
-    http_log_handler = logging.StreamHandler(sys.stderr)
-    http_log_handler.setFormatter(fooster.web.HTTPLogFormatter())
-    http_log.addHandler(http_log_handler)
-    http_log.addFilter(fooster.web.HTTPLogFilter())
-    http_log.setLevel(logging.CRITICAL)
-
-    log = logging.getLogger('scoreboard')
-    log.addHandler(logging.StreamHandler(sys.stderr))
-    log.setLevel(logging.INFO)
+    log = logging.getLogger('scoreboard:poll')
+    web_log = logging.getLogger('scoreboard:web')
+    http_log = logging.getLogger('scoreboard:http')
 
     config = load(args.config)
-    scoreboard.poll.reload(config)
 
     sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    svcd = multiprocessing.Process(target=scoreboard.poll.watch)
-    workers = [multiprocessing.Process(target=scoreboard.poll.worker) for i in range(config.workers)]
-    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': scoreboard.scoreboard.gen(args.template), '/status': scoreboard.scoreboard.gen_json()}, sync=scoreboard.sync.manager, log=web_log, http_log=http_log)
+    manager = multiprocessing.get_context(start_method).Manager()
+    sync = scoreboard.sync.Sync(manager)
+
+    scoreboard.poll.reload(sync, config)
+
+    svcd = multiprocessing.get_context(start_method).Process(target=scoreboard.poll.watch, args=(sync,))
+    workers = [multiprocessing.get_context(start_method).Process(target=scoreboard.poll.worker, args=(sync,)) for i in range(config.workers)]
+    httpd = fooster.web.HTTPServer((args.address, args.port), {'/': fooster.web.HTTPHandlerWrapper(scoreboard.scoreboard.Scoreboard, template=args.template, sync=sync), '/status': fooster.web.HTTPHandlerWrapper(scoreboard.scoreboard.ScoreboardJSON, sync=sync)}, log=web_log, http_log=http_log)
 
     log.info('Scoreboard initialized')
 
-    scoreboard.sync.watching.value = True
-    scoreboard.sync.working.value = True
+    sync.watching.value = True
+    sync.working.value = True
 
     svcd.start()
     for worker in workers:
@@ -84,10 +80,10 @@ def main():
 
     last = os.stat(args.config).st_mtime
 
-    signal.signal(signal.SIGINT, sigint)
-
     signal.signal(signal.SIGTERM, lambda signum, frame: sys.exit())
-    signal.signal(signal.SIGUSR1, lambda signum, frame: output())
+    signal.signal(signal.SIGUSR1, lambda signum, frame: output(sync))
+
+    signal.signal(signal.SIGINT, sigint)
 
     try:
         while True:
@@ -97,34 +93,38 @@ def main():
                 previous = config
 
                 config = load(args.config)
-                scoreboard.poll.reload(config)
+                scoreboard.poll.reload(sync, config)
 
                 if previous.workers != config.workers:
                     log.info('Restarting workers')
 
-                    scoreboard.sync.working.value = False
+                    sync.working.value = False
 
                     for worker in workers:
                         worker.join()
 
-                    workers = [multiprocessing.Process(target=scoreboard.poll.worker) for i in range(config.workers)]
+                    sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-                    scoreboard.sync.working.value = True
+                    workers = [multiprocessing.get_context(start_method).Process(target=scoreboard.poll.worker, args=(sync,)) for i in range(config.workers)]
+
+                    sync.working.value = True
 
                     for worker in workers:
                         worker.start()
 
+                    signal.signal(signal.SIGINT, sigint)
+
                 last = os.stat(args.config).st_mtime
 
-            while time.time() - wait < scoreboard.sync.poll.value:
+            while time.time() - wait < sync.poll.value:
                 time.sleep(1)
     except KeyboardInterrupt:
         sys.stderr.write('\n')
     except SystemExit:
         pass
 
-    scoreboard.sync.watching.value = False
-    scoreboard.sync.working.value = False
+    sync.watching.value = False
+    sync.working.value = False
 
     svcd.join()
     for worker in workers:
@@ -132,7 +132,7 @@ def main():
 
     httpd.close()
 
-    output()
+    output(sync)
 
 
 if __name__ == '__main__':

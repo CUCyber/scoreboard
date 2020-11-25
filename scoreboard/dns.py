@@ -4,7 +4,7 @@ import dns.exception
 import dns.resolver
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, hostname, type, answer=None, timeout=1, **kwargs):

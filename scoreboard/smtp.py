@@ -5,7 +5,7 @@ import ssl
 import string
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, cert=None, username=None, password=None, from_=None, to=None, timeout=1, **kwargs):

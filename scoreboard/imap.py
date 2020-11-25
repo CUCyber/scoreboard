@@ -1,13 +1,13 @@
 import imaplib
 import logging
-import socket  # not needed once imaplib supports timeout
+import socket  # not needed with Python 3.9
 import ssl
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
-# not needed once imaplib supports timeout
+# not needed with Python 3.9
 class IMAP4(imaplib.IMAP4):
     def _create_socket(self, timeout):
         host = None if not self.host else self.host
@@ -26,8 +26,8 @@ def check(addr, port, cert=None, username=None, password=None, list=None, timeou
     up = False
 
     try:
-        #imapc = imaplib.IMAP4(addr, port, timeout=timeout)
-        imapc = IMAP4(addr, port, timeout=timeout)  # not needed once imaplib supports timeout
+        # imapc = imaplib.IMAP4(addr, port, timeout=timeout)
+        imapc = IMAP4(addr, port, timeout=timeout)  # not needed with Python 3.9, replace with above
 
         up = True
 

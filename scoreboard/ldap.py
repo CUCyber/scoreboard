@@ -3,7 +3,7 @@ import logging
 import ldap
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, cert=None, dn=None, password=None, base=None, cn=None, timeout=1, **kwargs):

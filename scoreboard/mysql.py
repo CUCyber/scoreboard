@@ -3,7 +3,7 @@ import logging
 import MySQLdb
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, username, password, db='', query=None, result=None, timeout=1, **kwargs):

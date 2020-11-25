@@ -4,7 +4,7 @@ import socket
 import ssl
 
 
-log = logging.getLogger('scoreboard')
+log = logging.getLogger('scoreboard:poll')
 
 
 def check(addr, port, cert=None, username=None, password=None, list=None, timeout=1, **kwargs):
