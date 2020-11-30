@@ -4,8 +4,6 @@ import os
 import fooster.web.json
 import fooster.web.page
 
-import scoreboard.sync  # noqa: F401
-
 
 class Scoreboard(fooster.web.page.PageHandler):
     directory = os.path.dirname(os.path.abspath(__file__)) + '/html'
@@ -27,7 +25,8 @@ class Scoreboard(fooster.web.page.PageHandler):
             table += '\n\t\t</tr>\n\t</thead>\n\n\t<tbody>'
 
             for name in self.sync.teams:
-                table += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(html.escape(name)) + ''.join('<td class="{}">{}</td>'.format('up' if score['status'] else 'down', 'Up' if score['status'] else 'Down') for score in self.sync.scores[name] if score['service'] in self.sync.services)
+                scores = {score['service']: score['status'] for score in self.sync.scores[name] if score['service'] in self.sync.services}
+                table += '\n\t\t<tr>\n\t\t\t<td>{}</td>'.format(html.escape(name)) + ''.join('<td class="{}">{}</td>'.format('up' if scores[service] else 'down', 'Up' if scores[service] else 'Down') for service in self.sync.services)
                 if self.sync.show.value:
                     table += '<td>{}</td>'.format(sum(score['score'] for score in self.sync.scores[name]))
                 table += '\n\t\t</tr>'
